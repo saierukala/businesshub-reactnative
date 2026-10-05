@@ -16,7 +16,7 @@ are decided by the backend; the app shows what the API says and sends what the u
 | Owner / Manager | Dashboard, bookings, booking detail (assign or change technician, reschedule, cancel, no-show, follow-up, record payment), new booking for a customer, customers, technicians (skills, areas, hours, time off), needs reassignment, reports, reviews |
 | Owner only | Services, users, audit log |
 
-Reset-password, invite and email-verification links in emails open in the web app.
+Reset-password, invite and verification emails also contain a 6-digit code: in the app use "Forgot password" (code + new password), "I have a code from HomeFix" on the login screen (set up an account), or the code box under "Verify your email". Owner/Manager can create an invite or verification code for a customer ("Create app code" on the customer page, web or app) to read out over the phone. Codes work once, for 15 minutes, with 5 tries.
 
 ## Run it on your phone (no deployed backend needed)
 

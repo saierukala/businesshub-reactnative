@@ -3,10 +3,13 @@ import { z } from "zod";
 // Same rules as the backend (src/routes/auth.schemas.ts). The backend still validates;
 // these give instant feedback in the form.
 const email = z.string().trim().toLowerCase().pipe(z.email("Enter a valid email address"));
-const newPassword = z
+export const newPassword = z
   .string()
   .min(8, "Password must be at least 8 characters")
   .max(72, "Password must be at most 72 characters");
+
+// The 6-digit one-time code (mobile app), typed instead of opening an emailed link.
+export const codeField = z.string().trim().regex(/^\d{6}$/, "Enter the 6-digit code");
 
 export const loginSchema = z.object({
   email,

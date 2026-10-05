@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, View, type TextInputProps } from 'react-native';
 import { Controller, type Control, type FieldValues, type Path } from 'react-hook-form';
 import { Button, HelperText, Icon, RadioButton, Switch, Text, TextInput, useTheme } from 'react-native-paper';
 import { Banner } from './Parts';
+import { OtpInput } from './OtpInput';
 
 // Form building blocks that plug into react-hook-form. Each shows its own validation error under the field.
 
@@ -80,6 +81,22 @@ export function PasswordField<T extends FieldValues>({ control, name, label, hin
 
 export type Option = { value: string; label: string };
 
+// Looks like a text field but opens something when tapped (dropdown list, date or time picker).
+// The icon is a plain picture, not a button: a button inside the tappable field would be invalid on the web.
+export function PressableField({ label, value, icon, error, dense, expanded, onPress }: { label: string; value: string; icon: string; error?: boolean; dense?: boolean; expanded?: boolean; onPress: () => void }) {
+  const theme = useTheme();
+  return (
+    <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={value ? `${label}: ${value}` : label} accessibilityState={expanded === undefined ? undefined : { expanded }}>
+      <View pointerEvents="none">
+        <TextInput mode="outlined" dense={dense} label={label} value={value} editable={false} error={error} style={{ paddingRight: 36 }} />
+        <View style={styles.fieldIcon}>
+          <Icon source={icon} size={22} color={error ? theme.colors.error : theme.colors.onSurfaceVariant} />
+        </View>
+      </View>
+    </Pressable>
+  );
+}
+
 // A "dropdown": tap the field, pick from the list that opens under it.
 export function SelectField<T extends FieldValues>({ control, name, label, options, hint }: FieldProps<T> & { options: Option[] }) {
   const theme = useTheme();
@@ -90,18 +107,14 @@ export function SelectField<T extends FieldValues>({ control, name, label, optio
       name={name}
       render={({ field, fieldState }) => (
         <View>
-          <Pressable onPress={() => setOpen((o) => !o)} accessibilityRole="button" accessibilityLabel={label} accessibilityState={{ expanded: open }}>
-            <View pointerEvents="none">
-              <TextInput
-                mode="outlined"
-                label={label}
-                value={options.find((o) => o.value === field.value)?.label ?? ''}
-                editable={false}
-                error={fieldState.invalid}
-                right={<TextInput.Icon icon={open ? 'chevron-up' : 'chevron-down'} />}
-              />
-            </View>
-          </Pressable>
+          <PressableField
+            label={label}
+            value={options.find((o) => o.value === field.value)?.label ?? ''}
+            icon={open ? 'chevron-up' : 'chevron-down'}
+            error={fieldState.invalid}
+            expanded={open}
+            onPress={() => setOpen((o) => !o)}
+          />
           {/* The list opens right under the field (not in a dialog), so it also works inside form sheets. */}
           {open && (
             <View style={[styles.options, { borderColor: theme.colors.outline, backgroundColor: theme.colors.surface }]}>
@@ -223,6 +236,29 @@ const styles = StyleSheet.create({
   pill: { paddingHorizontal: 16, paddingVertical: 10, borderRadius: 999, borderWidth: 1.5 },
   btn: { height: 50 },
   btnLabel: { fontSize: 16, fontWeight: '700' },
+  fieldIcon: { position: 'absolute', right: 12, top: 6, bottom: 0, justifyContent: 'center' },
   options: { borderWidth: 1, borderRadius: 12, marginTop: 6, overflow: 'hidden' },
   choice: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, borderRadius: 14 },
 });
+
+// The 6-box code entry wired to react-hook-form, with a label above and the error below.
+export function OtpField<T extends FieldValues>({ control, name, label, hint }: FieldProps<T>) {
+  const theme = useTheme();
+  return (
+    <Controller
+      control={control}
+      name={name}
+      render={({ field, fieldState }) => (
+        <View style={{ gap: 8 }}>
+          <Text variant="labelLarge" style={{ color: theme.colors.onSurfaceVariant, textAlign: 'center' }}>{label}</Text>
+          <OtpInput value={String(field.value ?? '')} onChange={field.onChange} error={fieldState.invalid} />
+          {(fieldState.error || hint) && (
+            <HelperText type={fieldState.error ? 'error' : 'info'} visible style={{ textAlign: 'center' }}>
+              {fieldState.error?.message ?? hint}
+            </HelperText>
+          )}
+        </View>
+      )}
+    />
+  );
+}

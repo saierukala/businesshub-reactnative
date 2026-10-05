@@ -51,6 +51,9 @@ export default function Login() {
           <Button compact>Create an account</Button>
         </Link>
       </View>
+      <Link href="/connect" asChild>
+        <Button mode="text" icon="numeric">I have a code from HomeFix</Button>
+      </Link>
       {__DEV__ && (
         <View style={{ gap: 6, marginTop: 4 }}>
           <Text variant="labelSmall" style={{ color: theme.colors.onSurfaceVariant }}>DEMO LOGINS (dev only)</Text>

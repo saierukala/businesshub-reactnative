@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import { View } from 'react-native';
 import { Avatar, Button, Text, useTheme } from 'react-native-paper';
+import { api } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { formatPhone } from '@/lib/format';
 import { useResendVerification } from '@/lib/queries/auth';
 import { Banner, Card } from '@/ui/Parts';
+import { OtpInput } from '@/ui/OtpInput';
 import { useToast } from '@/ui/toast';
 
 const ROLE_LABEL = { OWNER: 'Owner', MANAGER: 'Manager', TECHNICIAN: 'Technician', CUSTOMER: 'Customer' };
@@ -29,7 +32,8 @@ export function ProfileCard({ showLogout = true }: { showLogout?: boolean }) {
       {user.email && !user.emailVerified && (
         <Banner tone="warn" icon="email-alert-outline" title="Verify your email">
           <View style={{ gap: 8 }}>
-            <Text variant="bodyMedium">We sent a link to {user.email}. Open it to confirm your address so booking updates reach you.</Text>
+            <Text variant="bodyMedium">We sent an email to {user.email}. Enter the 6-digit code from it (or from our office) so booking updates reach you.</Text>
+            <VerifyWithCode />
             <Button mode="outlined" compact loading={resend.isPending} onPress={() => resend.mutate(undefined, { onSuccess: (r) => toast.success(r.message), onError: (e) => toast.error(e.message) })}>
               Resend email
             </Button>
@@ -49,5 +53,39 @@ export function LogoutButton() {
     <Button mode="outlined" icon="logout" textColor={theme.colors.error} onPress={() => void logout()} contentStyle={{ height: 48 }} style={{ borderRadius: 14 }}>
       Log out
     </Button>
+  );
+}
+
+// Type the 6-digit code from the verification email. On success the account is reloaded and the banner goes away.
+function VerifyWithCode() {
+  const toast = useToast();
+  const { refresh } = useAuth();
+  const [code, setCode] = useState('');
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  // Runs by itself as soon as the 6th digit is typed (or pasted); the button is there for a retry.
+  async function verify(value = code) {
+    if (!/^\d{6}$/.test(value)) return setError('Enter the 6-digit code');
+    setBusy(true);
+    setError('');
+    try {
+      await api('/auth/verify-email-code', { method: 'POST', body: { code: value } });
+      await refresh();
+      toast.success('Email verified. Booking updates will reach you.');
+    } catch (e) {
+      setError((e as Error).message);
+      setCode('');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <View style={{ gap: 10 }}>
+      <OtpInput value={code} onChange={(c) => { setCode(c); setError(''); }} error={Boolean(error)} onComplete={(c) => void verify(c)} />
+      {error ? <Text variant="bodySmall" style={{ color: '#dc2626', textAlign: 'center' }}>{error}</Text> : null}
+      <Button mode="contained" onPress={() => void verify()} loading={busy} disabled={busy}>Verify</Button>
+    </View>
   );
 }

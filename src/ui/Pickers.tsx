@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 import { DatePickerModal, TimePickerModal } from 'react-native-paper-dates';
-import { HelperText, TextInput } from 'react-native-paper';
+import { HelperText } from 'react-native-paper';
+import { PressableField } from './Form';
 import { formatDay } from '@/lib/format';
 
 // "2026-10-05" <-> Date at local midnight (the pickers work with local dates; we only ever store the calendar day).
@@ -16,11 +17,7 @@ export function DateField({ label, value, onChange, min, max, error }: { label: 
   const [open, setOpen] = useState(false);
   return (
     <View>
-      <Pressable onPress={() => setOpen(true)} accessibilityRole="button" accessibilityLabel={label}>
-        <View pointerEvents="none">
-          <TextInput mode="outlined" label={label} value={value ? formatDay(value) : ''} editable={false} error={Boolean(error)} left={<TextInput.Icon icon="calendar" />} right={<TextInput.Icon icon="chevron-down" />} />
-        </View>
-      </Pressable>
+      <PressableField label={label} value={value ? formatDay(value) : ''} icon="calendar" error={Boolean(error)} onPress={() => setOpen(true)} />
       {error && <HelperText type="error" visible>{error}</HelperText>}
       <DatePickerModal
         locale="en"
@@ -44,11 +41,7 @@ export function TimeField({ label, value, onChange, error }: { label: string; va
   const [h, m] = (value || '09:00').split(':').map(Number);
   return (
     <View style={{ flex: 1 }}>
-      <Pressable onPress={() => setOpen(true)} accessibilityRole="button" accessibilityLabel={label}>
-        <View pointerEvents="none">
-          <TextInput mode="outlined" dense label={label} value={value} editable={false} error={error} right={<TextInput.Icon icon="clock-outline" />} />
-        </View>
-      </Pressable>
+      <PressableField dense label={label} value={value} icon="clock-outline" error={error} onPress={() => setOpen(true)} />
       <TimePickerModal
         visible={open}
         onDismiss={() => setOpen(false)}

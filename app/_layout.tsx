@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { useColorScheme, View } from 'react-native';
-import { ActivityIndicator, PaperProvider } from 'react-native-paper';
+import { useEffect, useState } from 'react';
+import { StyleSheet, useColorScheme, View } from 'react-native';
+import { ActivityIndicator, PaperProvider, useTheme } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Redirect, Slot, useSegments } from 'expo-router';
+import { Slot, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { en, registerTranslation } from 'react-native-paper-dates';
@@ -17,14 +17,30 @@ const AREA: Record<Role, string> = { OWNER: '(staff)', MANAGER: '(staff)', TECHN
 
 // Sends logged-out users to /login, and keeps each role inside its own area.
 // (Hiding screens is only UX: the API checks the role on every request.)
+// The navigator (<Slot />) is ALWAYS rendered and we move with router.replace: swapping it for a <Redirect>
+// makes Expo Router rebuild the whole app, which loses state such as a "saved" message shown at login.
 function Gate() {
   const { user, loading } = useAuth();
+  const theme = useTheme();
+  const router = useRouter();
   const area = useSegments()[0] as string | undefined;
+  const target = loading ? null : !user ? (area === '(auth)' ? null : '/login') : area !== AREA[user.role] ? homeFor(user.role) : null;
 
-  if (loading) return <View style={{ flex: 1, justifyContent: 'center' }}><ActivityIndicator size="large" /></View>;
-  if (!user) return area === '(auth)' ? <Slot /> : <Redirect href="/login" />;
-  if (area !== AREA[user.role]) return <Redirect href={homeFor(user.role)} />;
-  return <Slot />;
+  useEffect(() => {
+    if (target) router.replace(target);
+  }, [target, router]);
+
+  return (
+    <View style={{ flex: 1 }}>
+      <Slot />
+      {/* Covers the screen while we check the session or switch area, so nothing from the wrong area flashes. */}
+      {(loading || target) && (
+        <View style={[StyleSheet.absoluteFill, { backgroundColor: theme.colors.background, justifyContent: 'center' }]}>
+          <ActivityIndicator size="large" />
+        </View>
+      )}
+    </View>
+  );
 }
 
 export default function RootLayout() {

@@ -34,3 +34,12 @@ export function useInviteCustomer() {
     mutationFn: (customerId: string) => api<{ message: string }>("/auth/invite", { method: "POST", body: { customerId } }),
   });
 }
+
+export type AppCode = { code: string; type: "ACCOUNT_INVITE" | "EMAIL_VERIFY"; email: string; expiresAt: string };
+
+// "Device connect": a one-time code staff read to the customer to set up the mobile app. Shown once; audited.
+export function useCreateAppCode() {
+  return useMutation({
+    mutationFn: (customerId: string) => api<AppCode>(`/customers/${customerId}/app-code`, { method: "POST" }),
+  });
+}

@@ -21,6 +21,7 @@ import { useToast } from '@/ui/toast';
 import { BookingCard } from '../booking/BookingsList';
 import { BookingWizard } from '../booking/BookingWizard';
 import { AddressSection, ApplianceSection } from '../records';
+import { DeviceConnect } from './DeviceConnect';
 
 // Create or edit a customer. On a duplicate phone the API answers 409 with the matching customers: we show them, and
 // staff either open the existing one or confirm "save anyway".
@@ -153,6 +154,7 @@ export function CustomerProfile({ id }: { id: string }) {
           <Button mode="outlined" icon="email-fast-outline" loading={invite.isPending} onPress={() => invite.mutate(c.id, { onSuccess: (r) => toast.success(r.message), onError: (e) => toast.error(e.message) })} style={{ flex: 1 }}>Invite</Button>
         )}
       </View>
+      <DeviceConnect customer={c} />
       <AddressSection customerId={c.id} />
       <ApplianceSection customerId={c.id} />
       <View style={{ gap: 8 }}>

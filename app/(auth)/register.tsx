@@ -9,10 +9,12 @@ import { showApiError } from '@/lib/form';
 import { registerSchema, type RegisterInput } from '@/lib/schemas/auth';
 import { AuthShell } from '@/ui/AuthShell';
 import { FormAlert, PasswordField, SubmitButton, TextField } from '@/ui/Form';
+import { useToast } from '@/ui/toast';
 
 export default function Register() {
   const theme = useTheme();
   const { register } = useAuth();
+  const toast = useToast();
   const [busy, setBusy] = useState(false);
   const form = useForm<RegisterInput>({ resolver: zodResolver(registerSchema), defaultValues: { name: '', email: '', phone: '', password: '' }, mode: 'onTouched' });
 
@@ -20,6 +22,7 @@ export default function Register() {
     setBusy(true);
     try {
       await register({ ...rest, phone: phone || undefined });
+      toast.success('Account created. Check your email for a code to verify it.');
     } catch (err) {
       showApiError(form, err);
       setBusy(false);
