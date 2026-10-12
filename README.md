@@ -39,6 +39,18 @@ npx eas-cli@latest build --profile development --platform android
 Then `npx expo start` and open the project in the installed **HomeFix** app (not Expo Go).
 In the Razorpay screen choose UPI and enter `success@razorpay`.
 
+## Demo video clips (phone screens, for LinkedIn)
+
+```bash
+npm run demo
+```
+
+Playwright plays the story at human speed and saves one Full HD (1920x1080) clip per part in `demo-videos/`: the app at
+real phone size inside a phone frame, with a soft circle showing each tap. Its own database is wiped and seeded every run
+(the API runs with the worker, so notifications appear). `DEMO_SCENES=2,5` re-records only those clips.
+`demo-videos/checks/` has the first and last frame of each clip. The Razorpay payment itself is filmed on a real phone
+(development build, see above). Code: `demo/record.demo.ts` (the story) and `demo/scene.ts` (frame, pacing, taps).
+
 ## Run it on your phone (no deployed backend needed)
 
 1. Backend repo: start Postgres, `npm run seed` (once), then `npm run dev` (port 4000).
