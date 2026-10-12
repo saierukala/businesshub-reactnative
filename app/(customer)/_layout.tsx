@@ -10,6 +10,7 @@ export default function CustomerLayout() {
       <Stack.Screen name="bookings/[id]/index" options={{ title: 'Booking' }} />
       <Stack.Screen name="bookings/[id]/receipt" options={{ title: 'Receipt' }} />
       <Stack.Screen name="notifications" options={{ title: 'Notifications' }} />
+      <Stack.Screen name="settings" options={{ title: 'Settings' }} />
     </Stack>
   );
 }

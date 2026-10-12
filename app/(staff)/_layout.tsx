@@ -20,6 +20,8 @@ export default function StaffLayout() {
       <Stack.Screen name="staff/reviews" options={{ title: 'Reviews' }} />
       <Stack.Screen name="staff/audit" options={{ title: 'Audit log' }} />
       <Stack.Screen name="staff/notifications" options={{ title: 'Notifications' }} />
+      <Stack.Screen name="staff/roles" options={{ title: 'Roles & permissions' }} />
+      <Stack.Screen name="staff/settings" options={{ title: 'Settings' }} />
     </Stack>
   );
 }

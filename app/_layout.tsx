@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, useColorScheme, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { ActivityIndicator, PaperProvider, useTheme } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Slot, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { en, registerTranslation } from 'react-native-paper-dates';
+import { AppearanceProvider, useAppearance } from '@/lib/appearance';
 import { AuthProvider, homeFor, useAuth, type Role } from '@/lib/auth';
 import { darkTheme, lightTheme } from '@/ui/theme';
 import { ToastProvider } from '@/ui/toast';
@@ -44,20 +45,29 @@ function Gate() {
 }
 
 export default function RootLayout() {
-  const dark = useColorScheme() === 'dark';
   const [client] = useState(() => new QueryClient({ defaultOptions: { queries: { retry: 1, staleTime: 15_000 } } }));
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={client}>
-        <PaperProvider theme={dark ? darkTheme : lightTheme}>
-          <ToastProvider>
-            <AuthProvider>
-              <StatusBar style={dark ? 'light' : 'dark'} />
-              <Gate />
-            </AuthProvider>
-          </ToastProvider>
-        </PaperProvider>
+        <AppearanceProvider>
+          <Themed />
+        </AppearanceProvider>
       </QueryClientProvider>
     </SafeAreaProvider>
+  );
+}
+
+// Light or dark from Settings (or the phone's choice, when set to System).
+function Themed() {
+  const { dark } = useAppearance();
+  return (
+    <PaperProvider theme={dark ? darkTheme : lightTheme}>
+      <ToastProvider>
+        <AuthProvider>
+          <StatusBar style={dark ? 'light' : 'dark'} />
+          <Gate />
+        </AuthProvider>
+      </ToastProvider>
+    </PaperProvider>
   );
 }

@@ -10,13 +10,27 @@ are decided by the backend; the app shows what the API says and sends what the u
 
 | Role | Screens |
 | --- | --- |
-| Everyone | Log in, forgot password, notifications, account with log out, light and dark theme |
-| Customer | Register, home, book a repair (5 steps), my bookings, booking detail (reschedule, cancel, approve or decline an extra charge, payment, receipt, review), addresses and appliances with repair history |
+| Everyone | Log in, forgot password, notifications, account with log out, Settings (light, dark or follow the phone) |
+| Customer | Register, home, book a repair (5 steps), my bookings, booking detail (reschedule, cancel, approve or decline an extra charge, payment, Pay online with Razorpay, receipt, review), addresses and appliances with repair history |
 | Technician | Today's jobs, job screen (call, map, on my way, arrived, start work, notes, extra charge, complete, collect cash or UPI, receipt, follow-up visit) |
 | Owner / Manager | Dashboard, bookings, booking detail (assign or change technician, reschedule, cancel, no-show, follow-up, record payment), new booking for a customer, customers, technicians (skills, areas, hours, time off), needs reassignment, reports, reviews |
-| Owner only | Services, users, audit log |
+| Owner only | Services, users, audit log, roles & permissions (read-only) |
 
 Reset-password, invite and verification emails also contain a 6-digit code: in the app use "Forgot password" (code + new password), "I have a code from HomeFix" on the login screen (set up an account), or the code box under "Verify your email". Owner/Manager can create an invite or verification code for a customer ("Create app code" on the customer page, web or app) to read out over the phone. Codes work once, for 15 minutes, with 5 tries.
+
+## Pay online (Razorpay, test mode)
+
+A customer pays a completed visit with the native Razorpay SDK (`react-native-razorpay`). The server makes the order and the amount,
+and checks Razorpay's signature before marking the booking paid (same endpoints as the web).
+The button shows only when the backend has Razorpay **test** keys, and only in a **development build**: Expo Go and the browser
+preview have no Razorpay native module, so there it is hidden and cash / UPI to the technician still works.
+
+```bash
+npx expo run:android
+```
+
+That runs prebuild (makes the `android/` folder) and needs Android Studio; or use `npx eas-cli@latest build --profile development`.
+In the Razorpay screen choose UPI and enter `success@razorpay`.
 
 ## Run it on your phone (no deployed backend needed)
 

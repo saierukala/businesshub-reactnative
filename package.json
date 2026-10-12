@@ -19,12 +19,14 @@
     "react-native": "0.86.3",
     "react-native-paper": "^5.15.3",
     "react-native-paper-dates": "^0.24.0",
+    "react-native-razorpay": "^3.0.0",
     "react-native-safe-area-context": "~5.7.0",
     "react-native-screens": "~4.26.0",
     "react-native-web": "^0.21.2",
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@types/react": "~19.2.2",
     "typescript": "~6.0.3",
     "vitest": "^4.1.11"
@@ -35,7 +37,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "e2e": "playwright test"
   },
   "private": true
 }

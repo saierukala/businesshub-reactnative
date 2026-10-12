@@ -141,7 +141,7 @@ export function BookingWizard({ customerId }: { customerId?: string }) {
 
       {step === 1 && (
         <View style={{ gap: 20 }}>
-          <TextInput mode="outlined" label="What is wrong?" placeholder="e.g. Not cooling, makes a loud noise at night" value={draft.problem} onChangeText={(t) => set({ problem: t })} multiline numberOfLines={3} maxLength={1000} style={{ minHeight: 90 }} />
+          <TextInput mode="outlined" label="What is wrong?" accessibilityLabel="What is wrong?" placeholder="e.g. Not cooling, makes a loud noise at night" value={draft.problem} onChangeText={(t) => set({ problem: t })} multiline numberOfLines={3} maxLength={1000} style={{ minHeight: 90 }} />
           {services.isPending ? <ListSkeleton rows={2} /> : services.isError ? <ErrorState error={services.error} onRetry={() => services.refetch()} /> : services.data.items.length === 0 ? (
             <EmptyState icon="tools" title="No repair service for this appliance yet" description="Please call us to help with this booking." />
           ) : (
@@ -210,7 +210,7 @@ export function BookingWizard({ customerId }: { customerId?: string }) {
           {needsOverride && (
             <View style={{ gap: 8 }}>
               <FormAlert message={needsOverride} />
-              <TextInput mode="outlined" label="Reason for booking inside the cutoff" value={draft.overrideReason} onChangeText={(t) => set({ overrideReason: t })} multiline numberOfLines={2} maxLength={300} />
+              <TextInput mode="outlined" label="Reason for booking inside the cutoff" accessibilityLabel="Reason for booking inside the cutoff" value={draft.overrideReason} onChangeText={(t) => set({ overrideReason: t })} multiline numberOfLines={2} maxLength={300} />
               <Text variant="bodySmall" style={{ opacity: 0.7 }}>Saved in the audit log.</Text>
             </View>
           )}

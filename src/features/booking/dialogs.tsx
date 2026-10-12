@@ -18,7 +18,7 @@ type Props = { booking: Booking; visible: boolean; onClose: () => void };
 function OverrideField({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
   return (
     <>
-      <TextInput mode="outlined" label={label} value={value} onChangeText={onChange} multiline numberOfLines={2} maxLength={300} />
+      <TextInput mode="outlined" label={label} accessibilityLabel={label} value={value} onChangeText={onChange} multiline numberOfLines={2} maxLength={300} />
       <Text variant="bodySmall" style={{ opacity: 0.7 }}>Saved in the audit log.</Text>
     </>
   );
@@ -77,7 +77,7 @@ function CancelForm({ booking, onClose }: Omit<Props, 'visible'>) {
   return (
     <>
       <FormAlert message={error?.message} />
-      <TextInput mode="outlined" label="Reason (optional)" value={reason} onChangeText={setReason} multiline numberOfLines={2} maxLength={300} />
+      <TextInput mode="outlined" label="Reason (optional)" accessibilityLabel="Reason (optional)" value={reason} onChangeText={setReason} multiline numberOfLines={2} maxLength={300} />
       {needsOverride && <OverrideField label="Reason for cancelling late" value={override} onChange={setOverride} />}
       <SubmitButton onPress={submit} pending={cancel.isPending} disabled={needsOverride && override.trim().length < 3}>Cancel booking</SubmitButton>
     </>
@@ -170,7 +170,7 @@ function FollowUpForm({ booking, staff, onClose }: Omit<Props, 'visible'> & { st
           onChange={(id) => setTechnicianId(id === 'auto' ? undefined : id)}
         />
       )}
-      <TextInput mode="outlined" label="What is the follow-up for? (optional)" value={note} onChangeText={setNote} multiline numberOfLines={2} maxLength={1000} />
+      <TextInput mode="outlined" label="What is the follow-up for? (optional)" accessibilityLabel="What is the follow-up for? (optional)" value={note} onChangeText={setNote} multiline numberOfLines={2} maxLength={1000} />
       {needsOverride && <OverrideField label="Reason for booking inside the cutoff" value={override} onChange={setOverride} />}
       <SubmitButton onPress={submit} pending={create.isPending} disabled={!slot || (needsOverride && override.trim().length < 3)}>Book follow-up</SubmitButton>
     </>

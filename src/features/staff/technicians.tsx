@@ -104,7 +104,7 @@ function AreasEditor({ technician }: { technician: Technician }) {
     <SetupCard title="Service areas" description="Neighbourhoods this technician covers. Matched against the area in the customer's address." dirty={dirty} pending={save.isPending}
       onSave={() => save.mutate({ areas }, { onSuccess: () => toast.success('Areas saved'), onError: (e) => toast.error(e.message) })}>
       <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
-        <TextInput mode="outlined" dense label="Add an area (e.g. Kondapur)" value={draft} onChangeText={setDraft} onSubmitEditing={add} maxLength={60} style={{ flex: 1 }} />
+        <TextInput mode="outlined" dense label="Add an area (e.g. Kondapur)" accessibilityLabel="Add an area (e.g. Kondapur)" value={draft} onChangeText={setDraft} onSubmitEditing={add} maxLength={60} style={{ flex: 1 }} />
         <Button mode="contained-tonal" icon="plus" onPress={add}>Add</Button>
       </View>
       {areas.length === 0 ? <Text variant="bodySmall" style={{ opacity: 0.6 }}>No areas yet.</Text> : (

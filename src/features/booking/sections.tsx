@@ -15,6 +15,7 @@ import { FormAlert, PillGroup, SubmitButton, TextField } from '@/ui/Form';
 import { Banner, Card, InfoRows, SectionTitle, StarInput, Stars } from '@/ui/Parts';
 import { Controller } from 'react-hook-form';
 import { useToast } from '@/ui/toast';
+import { PayOnline } from './PayOnline';
 
 // The technician found extra work and asked for more money. Nothing beyond the base service happens until this is
 // approved. The customer answers here; staff use it to record the customer's answer from a phone call.
@@ -102,6 +103,7 @@ export function PaymentSection({ booking, canRecord, receiptHref }: { booking: B
       <View style={{ gap: 8 }}>
         <SectionTitle>Payment</SectionTitle>
         <Banner tone="info" icon="cash"><Text variant="bodyMedium"><Text style={{ fontWeight: '800' }}>{due} to pay.</Text> You can pay the technician in cash or by UPI. A receipt appears here once it is recorded.</Text></Banner>
+        <PayOnline bookingId={booking.id} due={due} />
       </View>
     );
   }
@@ -115,7 +117,7 @@ export function PaymentSection({ booking, canRecord, receiptHref }: { booking: B
         <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant }}>Visit charge{booking.visit?.extraCharge.status === 'APPROVED' ? ' + approved extra charge' : ''}.</Text>
       </Card>
       <PillGroup value={method} onChange={(v) => setMethod(v as 'CASH' | 'UPI')} options={[{ value: 'CASH', label: '💵 Cash' }, { value: 'UPI', label: '📱 UPI' }]} />
-      {method === 'UPI' && <TextInput mode="outlined" label="UPI transaction ID (optional)" value={reference} onChangeText={setReference} maxLength={100} />}
+      {method === 'UPI' && <TextInput mode="outlined" label="UPI transaction ID (optional)" accessibilityLabel="UPI transaction ID (optional)" value={reference} onChangeText={setReference} maxLength={100} />}
       <SubmitButton
         icon="check-circle-outline"
         pending={record.isPending}

@@ -26,6 +26,7 @@ export function TextField<T extends FieldValues>({
           <TextInput
             mode="outlined"
             label={label}
+            accessibilityLabel={label}
             value={String(field.value ?? '')}
             onChangeText={field.onChange}
             onBlur={field.onBlur}
@@ -58,6 +59,7 @@ export function PasswordField<T extends FieldValues>({ control, name, label, hin
           <TextInput
             mode="outlined"
             label={label}
+            accessibilityLabel={label}
             value={String(field.value ?? '')}
             onChangeText={field.onChange}
             onBlur={field.onBlur}
@@ -88,7 +90,7 @@ export function PressableField({ label, value, icon, error, dense, expanded, onP
   return (
     <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={value ? `${label}: ${value}` : label} accessibilityState={expanded === undefined ? undefined : { expanded }}>
       <View pointerEvents="none">
-        <TextInput mode="outlined" dense={dense} label={label} value={value} editable={false} error={error} style={{ paddingRight: 36 }} />
+        <TextInput mode="outlined" dense={dense} label={label} accessibilityLabel={label} value={value} editable={false} error={error} style={{ paddingRight: 36 }} />
         <View style={styles.fieldIcon}>
           <Icon source={icon} size={22} color={error ? theme.colors.error : theme.colors.onSurfaceVariant} />
         </View>

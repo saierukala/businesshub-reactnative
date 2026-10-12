@@ -10,6 +10,7 @@ export default function TechLayout() {
       <Stack.Screen name="tech/jobs/[id]/index" options={{ title: 'Job' }} />
       <Stack.Screen name="tech/jobs/[id]/receipt" options={{ title: 'Receipt' }} />
       <Stack.Screen name="tech/notifications" options={{ title: 'Notifications' }} />
+      <Stack.Screen name="tech/settings" options={{ title: 'Settings' }} />
     </Stack>
   );
 }

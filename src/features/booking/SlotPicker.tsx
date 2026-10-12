@@ -44,6 +44,7 @@ export function SlotPicker({ serviceId, area, date, slot, onChange, maxDaysAhead
               <Pressable
                 key={d}
                 onPress={() => onChange(d, undefined)}
+                testID={`day-${d}`}
                 accessibilityRole="button"
                 accessibilityState={{ selected: on }}
                 accessibilityLabel={formatDay(d)}
@@ -82,6 +83,7 @@ export function SlotPicker({ serviceId, area, date, slot, onChange, maxDaysAhead
                       <Pressable
                         key={s.startAt}
                         onPress={() => onChange(date, s)}
+                        testID="slot"
                         accessibilityRole="radio"
                         accessibilityState={{ selected: on }}
                         style={[styles.time, { backgroundColor: on ? theme.colors.primary : theme.colors.surface, borderColor: on ? theme.colors.primary : theme.colors.outline }]}

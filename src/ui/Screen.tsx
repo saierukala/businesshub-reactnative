@@ -30,7 +30,7 @@ export function Screen({ children, scroll = true, top, onRefresh, refreshing = f
   );
 
   return (
-    <KeyboardAvoidingView style={[styles.fill, { backgroundColor: theme.colors.background }]} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <KeyboardAvoidingView testID="screen" style={[styles.fill, { backgroundColor: theme.colors.background }]} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       {body}
       {footer && (
         <View style={[styles.footer, { backgroundColor: theme.colors.surface, borderTopColor: theme.colors.outlineVariant, paddingBottom: insets.bottom + 12 }]}>
