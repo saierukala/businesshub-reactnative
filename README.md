@@ -29,7 +29,14 @@ preview have no Razorpay native module, so there it is hidden and cash / UPI to 
 npx expo run:android
 ```
 
-That runs prebuild (makes the `android/` folder) and needs Android Studio; or use `npx eas-cli@latest build --profile development`.
+That runs prebuild (makes the `android/` folder) and needs Android Studio. Without Android Studio, build in Expo's cloud
+(free Expo account) and install the APK from the link it prints:
+
+```bash
+npx eas-cli@latest build --profile development --platform android
+```
+
+Then `npx expo start` and open the project in the installed **HomeFix** app (not Expo Go).
 In the Razorpay screen choose UPI and enter `success@razorpay`.
 
 ## Run it on your phone (no deployed backend needed)
