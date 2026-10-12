@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import { Avatar, Button, Text, useTheme } from 'react-native-paper';
+import { useAppTheme } from '@/ui/theme';
 import { api } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { formatPhone } from '@/lib/format';
@@ -58,6 +59,7 @@ export function LogoutButton() {
 
 // Type the 6-digit code from the verification email. On success the account is reloaded and the banner goes away.
 function VerifyWithCode() {
+  const theme = useAppTheme();
   const toast = useToast();
   const { refresh } = useAuth();
   const [code, setCode] = useState('');
@@ -84,7 +86,7 @@ function VerifyWithCode() {
   return (
     <View style={{ gap: 10 }}>
       <OtpInput value={code} onChange={(c) => { setCode(c); setError(''); }} error={Boolean(error)} onComplete={(c) => void verify(c)} />
-      {error ? <Text variant="bodySmall" style={{ color: '#dc2626', textAlign: 'center' }}>{error}</Text> : null}
+      {error ? <Text variant="bodySmall" style={{ color: theme.colors.error, textAlign: 'center' }}>{error}</Text> : null}
       <Button mode="contained" onPress={() => void verify()} loading={busy} disabled={busy}>Verify</Button>
     </View>
   );

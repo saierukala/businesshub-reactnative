@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { Linking, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Button, Text, useTheme } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import { formatDate, formatDuration, formatINR, formatPhone, formatSlot, formatTime } from '@/lib/format';
 import { useBooking, useMarkNoShow } from '@/lib/queries/bookings';
 import type { BookingStatus } from '@/lib/types';
-import { Banner, Card, ConfirmDialog, ErrorState, InfoRows, ListSkeleton, SectionTitle, StatusChip } from '@/ui/Parts';
+import { Banner, Card, ConfirmDialog, ErrorState, Hero, InfoRows, ListSkeleton, SectionTitle, StatusChip } from '@/ui/Parts';
+import { useAppTheme } from '@/ui/theme';
+import { VisitSteps } from '@/ui/VisitSteps';
 import { Screen } from '@/ui/Screen';
 import { useToast } from '@/ui/toast';
 import { AssignModal, CancelModal, FollowUpModal, RescheduleModal } from './dialogs';
@@ -20,7 +22,7 @@ type Dialog = 'reschedule' | 'cancel' | 'noshow' | 'assign' | 'followup' | null;
 
 // One booking, for a customer (staff = false) or for Owner/Manager (staff = true). Every action is decided and checked by the API.
 export function BookingDetail({ id, staff = false }: { id: string; staff?: boolean }) {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const router = useRouter();
   const toast = useToast();
   const query = useBooking(id);
@@ -50,11 +52,17 @@ export function BookingDetail({ id, staff = false }: { id: string; staff?: boole
 
   return (
     <Screen onRefresh={() => query.refetch()} refreshing={query.isRefetching}>
-      <View style={{ gap: 8 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Text variant="headlineSmall" style={{ fontWeight: '800' }}>{b.bookingNumber}</Text>
-          <StatusChip status={b.status} />
+      <Hero style={{ gap: 14 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
+          <View style={{ flex: 1, gap: 2 }}>
+            <Text variant="headlineSmall" style={{ fontWeight: '800', color: theme.app.onGradient }}>{b.bookingNumber}</Text>
+            <Text variant="bodyMedium" style={{ color: theme.app.onGradient, opacity: 0.9 }} numberOfLines={1}>{b.service.name} · {formatTime(b.startAt)}</Text>
+          </View>
+          <View style={{ backgroundColor: theme.colors.surface, borderRadius: 999 }}><StatusChip status={b.status} /></View>
         </View>
+        <VisitSteps status={b.status} />
+      </Hero>
+      <View style={{ gap: 8 }}>
         {b.needsReassignment && <Text style={{ color: theme.colors.error, fontWeight: '700' }}>Needs a new technician</Text>}
         {b.followUpOf && <Button compact style={{ alignSelf: 'flex-start' }} onPress={() => router.push(`${base}/${b.followUpOf!.id}`)}>Follow-up to {b.followUpOf.bookingNumber}</Button>}
       </View>

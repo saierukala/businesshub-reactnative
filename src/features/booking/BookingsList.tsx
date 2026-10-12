@@ -1,39 +1,51 @@
 import { useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Icon, Text, useTheme } from 'react-native-paper';
 import { formatINR, formatTime, formatWeekdayDate } from '@/lib/format';
 import { useInfiniteList } from '@/lib/infinite';
 import type { Booking, BookingStatus } from '@/lib/types';
-import { statusMeta } from '@/ui/theme';
+import { alpha, statusMeta } from '@/ui/theme';
+import { categoryIcon } from '@/ui/icons';
 import { PillGroup } from '@/ui/Form';
 import { Card, InfiniteList, StatusChip } from '@/ui/Parts';
 
 // Same filter as the web app: one status, or all.
 const FILTERS = [{ value: '', label: 'All' }, ...(Object.keys(statusMeta) as BookingStatus[]).map((s) => ({ value: s, label: statusMeta[s].label }))];
 
+// The list only knows the service's visit charge (the final total, with any extra charge, is on the booking itself),
+// so it is labelled as the visit charge.
 export function BookingCard({ booking: b, staff, onPress }: { booking: Booking; staff?: boolean; onPress: () => void }) {
   const theme = useTheme();
   const muted = { color: theme.colors.onSurfaceVariant };
+  const tint = statusMeta[b.status].color;
   return (
-    <Card onPress={onPress} style={{ gap: 8 }}>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Text variant="labelMedium" style={muted}>{b.bookingNumber}</Text>
+    <Card onPress={onPress} style={{ gap: 10, borderLeftWidth: 4, borderLeftColor: tint }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+        <View style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: alpha(tint, 0.14), alignItems: 'center', justifyContent: 'center' }}>
+          <Icon source={categoryIcon(b.appliance.category.name)} size={24} color={tint} />
+        </View>
+        <View style={{ flex: 1, gap: 2 }}>
+          <Text variant="titleMedium" style={{ fontWeight: '800' }} numberOfLines={1}>{b.service.name}</Text>
+          <Text variant="labelMedium" style={muted}>{b.bookingNumber}</Text>
+        </View>
         <StatusChip status={b.status} small />
       </View>
-      <Text variant="titleMedium" style={{ fontWeight: '700' }}>{b.service.name}</Text>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
         <Icon source="calendar-clock" size={16} color={theme.colors.primary} />
-        <Text variant="bodyMedium">{formatWeekdayDate(b.startAt)}, {formatTime(b.startAt)}</Text>
+        <Text variant="bodyMedium" style={{ fontWeight: '600' }}>{formatWeekdayDate(b.startAt)}, {formatTime(b.startAt)}</Text>
       </View>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
         <Icon source={staff ? 'account-outline' : 'wrench-outline'} size={16} color={theme.colors.onSurfaceVariant} />
-        <Text variant="bodySmall" style={muted} numberOfLines={1}>
+        <Text variant="bodySmall" style={[muted, { flex: 1 }]} numberOfLines={1}>
           {staff ? `${b.customer.name} · ${b.address.area}` : b.technician ? `${b.technician.name} · ${b.appliance.brand} ${b.appliance.category.name}` : `${b.appliance.brand} ${b.appliance.category.name} · technician not assigned yet`}
         </Text>
       </View>
       {b.needsReassignment && <Text variant="labelMedium" style={{ color: theme.colors.error, fontWeight: '700' }}>Needs a new technician</Text>}
-      <Text variant="labelLarge" style={{ alignSelf: 'flex-end', fontWeight: '700' }}>{formatINR(b.service.basePrice)}</Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: theme.colors.outlineVariant, paddingTop: 10 }}>
+        <Text variant="bodySmall" style={muted}>Visit charge <Text variant="labelLarge" style={{ fontWeight: '800', color: theme.colors.onSurface }}>{formatINR(b.service.basePrice)}</Text></Text>
+        <Icon source="chevron-right" size={20} color={theme.colors.onSurfaceVariant} />
+      </View>
     </Card>
   );
 }

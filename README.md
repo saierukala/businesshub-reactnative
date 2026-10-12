@@ -10,7 +10,7 @@ are decided by the backend; the app shows what the API says and sends what the u
 
 | Role | Screens |
 | --- | --- |
-| Everyone | Log in, forgot password, notifications, account with log out, Settings (light, dark or follow the phone) |
+| Everyone | Log in, forgot password, notifications, account with log out, Settings (light, dark or follow the phone; app colour) |
 | Customer | Register, home, book a repair (5 steps), my bookings, booking detail (reschedule, cancel, approve or decline an extra charge, payment, Pay online with Razorpay, receipt, review), addresses and appliances with repair history |
 | Technician | Today's jobs, job screen (call, map, on my way, arrived, start work, notes, extra charge, complete, collect cash or UPI, receipt, follow-up visit) |
 | Owner / Manager | Dashboard, bookings, booking detail (assign or change technician, reschedule, cancel, no-show, follow-up, record payment), new booking for a customer, customers, technicians (skills, areas, hours, time off), needs reassignment, reports, reviews |
@@ -50,6 +50,17 @@ real phone size inside a phone frame, with a soft circle showing each tap. Its o
 (the API runs with the worker, so notifications appear). `DEMO_SCENES=2,5` re-records only those clips.
 `demo-videos/checks/` has the first and last frame of each clip. The Razorpay payment itself is filmed on a real phone
 (development build, see above). Code: `demo/record.demo.ts` (the story) and `demo/scene.ts` (frame, pacing, taps).
+The clips use the default look: Navy, light.
+
+To review the look without recording, `npm run shots` saves the main screens in every app colour, light and dark, in
+`demo-videos/screens/` (one `sheet-<colour>.png` per colour, plus `contact-sheet.png`), and reports any screen wider than
+the phone. `SHOTS_PALETTES=navy,teal` limits the colours, `SHOTS_WIDTH=375` checks a smaller phone.
+
+## App colours (look only)
+
+Settings → App colour offers the website's 8 sidebar palettes: Navy (default), Khaki, Teal, Snow, Slate, Midnight, Dusk,
+Mist. The palette colours the header, the tab bar, buttons, hero cards and charts, in light and dark mode. It is saved on
+the device, like light/dark. All colours come from `src/ui/theme.ts` (`buildTheme`); screens use `useAppTheme()`.
 
 ## Run it on your phone (no deployed backend needed)
 

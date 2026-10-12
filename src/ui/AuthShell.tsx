@@ -1,23 +1,33 @@
 import type { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Icon, Text, useTheme } from 'react-native-paper';
+import { Icon, Text } from 'react-native-paper';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Screen } from './Screen';
+import { alpha, useAppTheme } from './theme';
 
-// The branded header used by login, register and forgot-password.
+// The branded header used by login, register, forgot-password and "I have a code":
+// a gradient band in the app colour with the logo, and the form card overlapping it.
 export function AuthShell({ title, subtitle, children }: { title: string; subtitle: string; children: ReactNode }) {
-  const theme = useTheme();
+  const theme = useAppTheme();
+  const insets = useSafeAreaInsets();
   return (
-    <Screen top contentStyle={{ justifyContent: 'center', gap: 24 }}>
-      <View style={styles.brand}>
-        <View style={[styles.logo, { backgroundColor: theme.colors.primary }]}>
-          <Icon source="wrench" size={34} color={theme.colors.onPrimary} />
+    <Screen contentStyle={{ paddingHorizontal: 0, paddingTop: 0, gap: 0 }}>
+      <LinearGradient colors={theme.app.gradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={[styles.band, { paddingTop: insets.top + 36 }]}>
+        <View style={[styles.logo, { backgroundColor: alpha(theme.app.onGradient, 0.16), borderColor: alpha(theme.app.onGradient, 0.35) }]}>
+          <Icon source="wrench" size={36} color={theme.app.onGradient} />
         </View>
-        <Text variant="headlineMedium" style={{ fontWeight: '800' }}>HomeFix</Text>
-        <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>Appliance repair at your doorstep</Text>
-      </View>
-      <View style={[styles.card, { backgroundColor: theme.colors.surface, borderColor: theme.colors.outlineVariant }]}>
+        <Text variant="headlineMedium" style={{ fontWeight: '800', color: theme.app.onGradient, letterSpacing: 0.3 }}>HomeFix</Text>
+        <Text variant="bodyMedium" style={{ color: theme.app.onGradient, opacity: 0.85 }}>Appliance repair at your doorstep</Text>
+      </LinearGradient>
+      <View
+        style={[
+          styles.card,
+          { backgroundColor: theme.colors.surface, borderColor: theme.colors.outlineVariant, boxShadow: `0 10px 30px ${alpha(theme.app.shadow, theme.dark ? 0.5 : 0.12)}` },
+        ]}
+      >
         <View style={{ gap: 4 }}>
-          <Text variant="titleLarge" style={{ fontWeight: '700' }}>{title}</Text>
+          <Text variant="titleLarge" style={{ fontWeight: '800' }}>{title}</Text>
           <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>{subtitle}</Text>
         </View>
         {children}
@@ -27,7 +37,7 @@ export function AuthShell({ title, subtitle, children }: { title: string; subtit
 }
 
 const styles = StyleSheet.create({
-  brand: { alignItems: 'center', gap: 6 },
-  logo: { width: 72, height: 72, borderRadius: 24, alignItems: 'center', justifyContent: 'center', marginBottom: 6 },
-  card: { borderRadius: 24, borderWidth: StyleSheet.hairlineWidth, padding: 20, gap: 12 },
+  band: { alignItems: 'center', gap: 6, paddingBottom: 64, borderBottomLeftRadius: 32, borderBottomRightRadius: 32 },
+  logo: { width: 76, height: 76, borderRadius: 26, borderWidth: 1, alignItems: 'center', justifyContent: 'center', marginBottom: 8 },
+  card: { borderRadius: 24, borderWidth: StyleSheet.hairlineWidth, padding: 20, gap: 12, marginHorizontal: 16, marginTop: -40, marginBottom: 24 },
 });

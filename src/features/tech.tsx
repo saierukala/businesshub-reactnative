@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Linking, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Button, Icon, ProgressBar, Text, useTheme } from 'react-native-paper';
+import { Button, Icon, ProgressBar, Text } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/lib/auth';
@@ -14,9 +14,11 @@ import { extraChargeSchema, visitSchema, type ExtraChargeInput, type VisitInput 
 import type { BookingDetail, BookingStatus } from '@/lib/types';
 import { FormAlert, SubmitButton, TextField } from '@/ui/Form';
 import { FormModal } from '@/ui/FormModal';
-import { Banner, Card, EmptyState, ErrorState, InfoRows, ListSkeleton, SectionTitle, StatusChip } from '@/ui/Parts';
+import { Banner, Card, EmptyState, ErrorState, Hero, InfoRows, ListSkeleton, SectionTitle, StatusChip } from '@/ui/Parts';
+import { alpha, useAppTheme } from '@/ui/theme';
 import { Screen } from '@/ui/Screen';
 import { useToast } from '@/ui/toast';
+import { VisitSteps } from '@/ui/VisitSteps';
 import { FollowUpModal } from './booking/dialogs';
 import { PaymentSection } from './booking/sections';
 import { VisitSummary } from './booking/sections';
@@ -24,7 +26,7 @@ import { VisitSummary } from './booking/sections';
 // ---------- The technician's day ----------
 
 export function TechJobs() {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const router = useRouter();
   const { user } = useAuth();
   const q = useTechnicianDashboard();
@@ -32,17 +34,17 @@ export function TechJobs() {
 
   return (
     <Screen onRefresh={() => q.refetch()} refreshing={q.isRefetching}>
-      <Text variant="headlineSmall" style={{ fontWeight: '800' }}>Hi {first}</Text>
       {q.isPending ? <ListSkeleton /> : q.isError ? <ErrorState error={q.error} onRetry={() => q.refetch()} /> : (
         <>
-          <Card style={{ gap: 8 }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text variant="titleSmall" style={{ fontWeight: '700' }}>Today</Text>
-              <Text variant="bodyMedium">{q.data.counts.done} of {q.data.counts.total} done</Text>
+          <Hero style={{ gap: 8 }}>
+            <Text variant="headlineSmall" style={{ fontWeight: '800', color: theme.app.onGradient }}>Hi {first} 👋</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+              <Text variant="titleSmall" style={{ fontWeight: '700', color: theme.app.onGradient, opacity: 0.9 }}>Today</Text>
+              <Text variant="titleMedium" style={{ fontWeight: '800', color: theme.app.onGradient }}>{q.data.counts.done} of {q.data.counts.total} done</Text>
             </View>
-            <ProgressBar progress={q.data.counts.total ? q.data.counts.done / q.data.counts.total : 0} color="#16a34a" style={{ height: 8, borderRadius: 4 }} />
-            <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant }}>{q.data.counts.remaining} remaining</Text>
-          </Card>
+            <ProgressBar progress={q.data.counts.total ? q.data.counts.done / q.data.counts.total : 0} color={theme.app.onGradient} style={{ height: 10, borderRadius: 5, backgroundColor: alpha(theme.app.onGradient, 0.25) }} />
+            <Text variant="bodySmall" style={{ color: theme.app.onGradient, opacity: 0.85 }}>{q.data.counts.remaining} remaining</Text>
+          </Hero>
           {q.data.appointments.length === 0 && <EmptyState icon="coffee-outline" title="No jobs today" description="New assignments appear here. Pull down to refresh." />}
           {q.data.appointments.map((a) => (
             <Card key={a.id} onPress={() => router.push(`/tech/jobs/${a.id}`)} style={{ gap: 8 }}>
@@ -85,6 +87,7 @@ export function TechJob({ id }: { id: string }) {
 }
 
 function JobBody({ b, refreshing, onRefresh }: { b: BookingDetail; refreshing: boolean; onRefresh: () => void }) {
+  const theme = useAppTheme();
   const toast = useToast();
   const advance = useAdvanceBooking(b.id);
   const save = useSaveVisit(b.id);
@@ -134,10 +137,13 @@ function JobBody({ b, refreshing, onRefresh }: { b: BookingDetail; refreshing: b
 
   return (
     <Screen onRefresh={onRefresh} refreshing={refreshing} footer={footer}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Text variant="headlineSmall" style={{ fontWeight: '800', flex: 1 }}>{b.customer.name}</Text>
-        <StatusChip status={b.status} />
-      </View>
+      <Hero style={{ gap: 14 }}>
+        <View style={{ gap: 2 }}>
+          <Text variant="headlineSmall" style={{ fontWeight: '800', color: theme.app.onGradient }}>{b.customer.name}</Text>
+          <Text variant="bodyMedium" style={{ color: theme.app.onGradient, opacity: 0.9 }}>{b.service.name} · {formatTime(b.startAt)}</Text>
+        </View>
+        <VisitSteps status={b.status} />
+      </Hero>
 
       <View style={{ gap: 8 }}>
         {b.customer.phone && <Button mode="outlined" icon="phone" onPress={() => Linking.openURL(`tel:+91${b.customer.phone}`)}>Call {formatPhone(b.customer.phone)}</Button>}

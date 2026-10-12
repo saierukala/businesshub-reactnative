@@ -1,12 +1,13 @@
 import { useState, type ReactNode } from 'react';
 import { View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Button, Text, useTheme } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
+import { useAppTheme } from '@/ui/theme';
 import { addDays, formatINR, formatWeekdayDate, istDay } from '@/lib/format';
 import { useBookingReport, useRevenueReport, useServiceReport, useTechnicianReport, type BreakdownRow, type ReportRange } from '@/lib/queries/reports';
 import type { Page } from '@/lib/types';
 import { PillGroup } from '@/ui/Form';
-import { Card, EmptyState, ErrorState, ListSkeleton, StatCard } from '@/ui/Parts';
+import { Card, EmptyState, ErrorState, Hero, ListSkeleton, StatCard } from '@/ui/Parts';
 import { DateField } from '@/ui/Pickers';
 import { Screen } from '@/ui/Screen';
 import { BookingCard } from '../booking/BookingsList';
@@ -43,6 +44,7 @@ function Pager({ page, onPage }: { page: Pick<Page<unknown>, 'page' | 'totalPage
 
 function BookingsTab({ range, onPage }: { range: ReportRange; onPage: (p: number) => void }) {
   const router = useRouter();
+  const t = useAppTheme();
   const q = useBookingReport(range);
   const s = q.data?.summary;
   return (
@@ -50,10 +52,10 @@ function BookingsTab({ range, onPage }: { range: ReportRange; onPage: (p: number
       {s && (
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
           <StatCard label="Total" value={s.total} icon="calendar-multiple" />
-          <StatCard label="Completed" value={s.completed} icon="check-circle" tone="#16a34a" />
-          <StatCard label="Cancelled" value={s.cancelled} icon="close-circle" tone="#dc2626" />
-          <StatCard label="No-show" value={s.noShow} icon="account-off" tone="#b91c1c" />
-          <StatCard label="Rescheduled" value={s.rescheduled} icon="calendar-sync" tone="#d97706" />
+          <StatCard label="Completed" value={s.completed} icon="check-circle" tone={t.app.success} />
+          <StatCard label="Cancelled" value={s.cancelled} icon="close-circle" tone={t.app.danger} />
+          <StatCard label="No-show" value={s.noShow} icon="account-off" tone={t.colors.error} />
+          <StatCard label="Rescheduled" value={s.rescheduled} icon="calendar-sync" tone={t.app.warning} />
         </View>
       )}
       <Frame q={q} empty={q.data?.bookings.total === 0}>
@@ -69,17 +71,17 @@ function BookingsTab({ range, onPage }: { range: ReportRange; onPage: (p: number
 }
 
 function RevenueTab({ range, groupBy, onGroup, onPage }: { range: ReportRange; groupBy: string; onGroup: (g: string) => void; onPage: (p: number) => void }) {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const q = useRevenueReport({ ...range, groupBy: groupBy as 'day' | 'week' | 'month' });
   return (
     <View style={{ gap: 12 }}>
       <PillGroup options={GROUPS} value={groupBy} onChange={onGroup} />
       {q.data && (
-        <Card>
-          <Text variant="labelMedium" style={{ color: theme.colors.onSurfaceVariant }}>Total in this period</Text>
-          <Text variant="headlineMedium" style={{ fontWeight: '800' }}>{formatINR(q.data.totals.revenue)}</Text>
-          <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant }}>from {q.data.totals.payments} {q.data.totals.payments === 1 ? 'payment' : 'payments'}</Text>
-        </Card>
+        <Hero style={{ gap: 4 }}>
+          <Text variant="labelLarge" style={{ color: theme.app.onGradient, opacity: 0.85 }}>Total in this period</Text>
+          <Text variant="displaySmall" style={{ fontWeight: '800', color: theme.app.onGradient }}>{formatINR(q.data.totals.revenue)}</Text>
+          <Text variant="bodyMedium" style={{ color: theme.app.onGradient, opacity: 0.85 }}>from {q.data.totals.payments} {q.data.totals.payments === 1 ? 'payment' : 'payments'}</Text>
+        </Hero>
       )}
       <Frame q={q} empty={q.data?.total === 0}>
         {q.data && (
@@ -104,7 +106,7 @@ function RevenueTab({ range, groupBy, onGroup, onPage }: { range: ReportRange; g
 }
 
 function BreakdownTab({ q, onPage, rating }: { q: Q & { data?: Page<BreakdownRow> }; onPage: (p: number) => void; rating?: boolean }) {
-  const theme = useTheme();
+  const theme = useAppTheme();
   return (
     <Frame q={q} empty={q.data?.total === 0}>
       {q.data && (

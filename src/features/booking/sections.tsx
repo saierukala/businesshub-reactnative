@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Button, Text, TextInput, useTheme } from 'react-native-paper';
+import { Button, Text, TextInput } from 'react-native-paper';
+import { useAppTheme } from '@/ui/theme';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { showApiError } from '@/lib/form';
@@ -73,7 +74,7 @@ const METHOD_LABEL = { CASH: 'cash', UPI: 'UPI', CARD: 'card', ONLINE: 'online' 
 
 // Payment for a completed visit. The amount comes from the API (price + approved extra charge); we only record HOW it was paid.
 export function PaymentSection({ booking, canRecord, receiptHref }: { booking: BookingDetail; canRecord: boolean; receiptHref: string }) {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const router = useRouter();
   const toast = useToast();
   const record = useRecordPayment(booking.id);
@@ -88,7 +89,7 @@ export function PaymentSection({ booking, canRecord, receiptHref }: { booking: B
       <View style={{ gap: 8 }}>
         <SectionTitle>Payment</SectionTitle>
         <Card style={{ gap: 10 }}>
-          <Text variant="titleMedium" style={{ fontWeight: '800', color: '#16a34a' }}>Paid {formatINR(p.amount)} by {METHOD_LABEL[p.method]}</Text>
+          <Text variant="titleMedium" style={{ fontWeight: '800', color: theme.app.success }}>Paid {formatINR(p.amount)} by {METHOD_LABEL[p.method]}</Text>
           <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant }}>
             {p.paidAt && `${formatDate(p.paidAt)}, ${formatTime(p.paidAt)}`}{p.reference && ` · Ref ${p.reference}`}{p.recordedBy && ` · Recorded by ${p.recordedBy}`}
           </Text>
@@ -138,7 +139,7 @@ const WORDS = ['Poor', 'Fair', 'Good', 'Very good', 'Excellent'];
 
 function ReviewForm({ bookingId }: { bookingId: string }) {
   const toast = useToast();
-  const theme = useTheme();
+  const theme = useAppTheme();
   const create = useCreateReview(bookingId);
   const form = useForm<ReviewValues>({ resolver: zodResolver(reviewSchema), mode: 'onTouched', defaultValues: { comment: '' } });
   const submit = form.handleSubmit((v) =>

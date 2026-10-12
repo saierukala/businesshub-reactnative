@@ -1,11 +1,12 @@
 import { View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Button, Chip, Text, useTheme } from 'react-native-paper';
+import { Button, Chip, Icon, Text } from 'react-native-paper';
+import { useAuth } from '@/lib/auth';
 import { formatINR } from '@/lib/format';
 import { useManagerDashboard } from '@/lib/queries/dashboard';
-import { statusMeta } from '@/ui/theme';
+import { alpha, statusMeta, useAppTheme } from '@/ui/theme';
 import { BarList, MiniBars } from '@/ui/Charts';
-import { Banner, Card, ErrorState, ListSkeleton, SectionTitle, StatCard } from '@/ui/Parts';
+import { Banner, Card, ErrorState, Hero, ListSkeleton, SectionTitle, StatCard } from '@/ui/Parts';
 import { Screen } from '@/ui/Screen';
 import { BookingCard } from '../booking/BookingsList';
 import type { BookingStatus } from '@/lib/types';
@@ -15,7 +16,8 @@ const shortDay = (iso: string) => new Date(`${iso}T00:00:00+05:30`).toLocaleDate
 
 // Owner / Manager home: what needs attention today. Every number is counted by the API (SQL), not by the app.
 export function ManagerDashboard() {
-  const theme = useTheme();
+  const theme = useAppTheme();
+  const { user } = useAuth();
   const router = useRouter();
   const q = useManagerDashboard();
 
@@ -26,9 +28,17 @@ export function ManagerDashboard() {
         const today = Object.entries(d.todayByStatus) as [BookingStatus, number][];
         return (
           <>
+            <Hero>
+              <Text variant="labelLarge" style={{ color: theme.app.onGradient, opacity: 0.85 }}>Hi {user?.name.split(' ')[0]} · revenue today</Text>
+              <Text variant="displaySmall" style={{ color: theme.app.onGradient, fontWeight: '800' }}>{formatINR(d.revenue.today)}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                <Icon source="chart-line" size={18} color={theme.app.onGradient} />
+                <Text variant="bodyMedium" style={{ color: theme.app.onGradient, opacity: 0.9 }}>This month {formatINR(d.revenue.thisMonth)}</Text>
+              </View>
+            </Hero>
             <View style={{ flexDirection: 'row', gap: 12 }}>
-              <StatCard label="Revenue today" value={formatINR(d.revenue.today)} icon="cash" tone="#16a34a" />
-              <StatCard label="This month" value={formatINR(d.revenue.thisMonth)} icon="chart-line" />
+              <StatCard label="Bookings today" value={today.reduce((sum, [, n]) => sum + n, 0)} icon="calendar-today" tone={theme.app.info} />
+              <StatCard label="Need a technician" value={d.pendingAssignments.total} icon="account-clock" tone={d.pendingAssignments.total > 0 ? theme.app.warning : theme.app.success} />
             </View>
 
             {d.needsReassignment.total > 0 && (
@@ -44,7 +54,7 @@ export function ManagerDashboard() {
               ) : (
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
                   {today.map(([status, n]) => (
-                    <Chip key={status} icon={statusMeta[status].icon} style={{ backgroundColor: statusMeta[status].color + '1f' }} textStyle={{ color: statusMeta[status].color, fontWeight: '700' }}>
+                    <Chip key={status} icon={statusMeta[status].icon} style={{ backgroundColor: alpha(statusMeta[status].color, 0.12) }} textStyle={{ color: statusMeta[status].color, fontWeight: '700' }}>
                       {statusMeta[status].label}: {n}
                     </Chip>
                   ))}

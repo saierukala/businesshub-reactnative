@@ -1,5 +1,6 @@
 import { Share, View } from 'react-native';
-import { Button, Divider, Icon, Text, useTheme } from 'react-native-paper';
+import { Button, Divider, Icon, Text } from 'react-native-paper';
+import { useAppTheme } from '@/ui/theme';
 import { formatDate, formatINR, formatPhone, formatTime } from '@/lib/format';
 import { useReceipt } from '@/lib/queries/payments';
 import { Card, ErrorState, ListSkeleton } from '@/ui/Parts';
@@ -7,7 +8,7 @@ import { Screen } from '@/ui/Screen';
 
 // The receipt for a paid booking, with a Share button (WhatsApp, email, ...).
 export function Receipt({ bookingId }: { bookingId: string }) {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const q = useReceipt(bookingId);
   if (q.isPending) return <Screen><ListSkeleton rows={3} /></Screen>;
   if (q.isError) return <Screen><ErrorState error={q.error} onRetry={() => q.refetch()} /></Screen>;
@@ -23,7 +24,7 @@ export function Receipt({ bookingId }: { bookingId: string }) {
     <Screen footer={<Button mode="contained" icon="share-variant" onPress={share} contentStyle={{ height: 50 }}>Share receipt</Button>}>
       <Card style={{ gap: 14, padding: 20 }}>
         <View style={{ alignItems: 'center', gap: 6 }}>
-          <Icon source="check-decagram" size={44} color="#16a34a" />
+          <Icon source="check-decagram" size={44} color={theme.app.success} />
           <Text variant="titleLarge" style={{ fontWeight: '800' }}>Payment received</Text>
           <Text variant="displaySmall" style={{ fontWeight: '800' }}>{formatINR(r.total)}</Text>
           <Text variant="bodySmall" style={muted}>{r.method}{r.reference ? ` · Ref ${r.reference}` : ''}</Text>
@@ -54,7 +55,7 @@ export function Receipt({ bookingId }: { bookingId: string }) {
 }
 
 function Row({ k, v }: { k: string; v: string }) {
-  const theme = useTheme();
+  const theme = useAppTheme();
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 16 }}>
       <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant }}>{k}</Text>

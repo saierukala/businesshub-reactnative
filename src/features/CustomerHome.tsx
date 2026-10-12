@@ -1,15 +1,17 @@
 import { ScrollView, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Button, Icon, Text, useTheme } from 'react-native-paper';
+import { Button, Icon, Text } from 'react-native-paper';
 import { useAuth } from '@/lib/auth';
 import { formatDate, formatINR } from '@/lib/format';
 import { useCustomerDashboard } from '@/lib/queries/dashboard';
-import { Card, ErrorState, ListSkeleton, SectionTitle, Stars } from '@/ui/Parts';
+import { Card, ErrorState, Hero, ListSkeleton, SectionTitle, Stars } from '@/ui/Parts';
+import { categoryIcon } from '@/ui/icons';
+import { useAppTheme } from '@/ui/theme';
 import { Screen } from '@/ui/Screen';
 import { BookingCard } from './booking/BookingsList';
 
 export function CustomerHome() {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const router = useRouter();
   const { user } = useAuth();
   const q = useCustomerDashboard();
@@ -17,13 +19,13 @@ export function CustomerHome() {
 
   return (
     <Screen onRefresh={() => q.refetch()} refreshing={q.isRefetching}>
-      <View style={{ backgroundColor: theme.colors.primary, borderRadius: 24, padding: 20, gap: 12 }}>
-        <Text variant="headlineSmall" style={{ color: theme.colors.onPrimary, fontWeight: '800' }}>Hi {first} 👋</Text>
-        <Text variant="bodyMedium" style={{ color: theme.colors.onPrimary, opacity: 0.9 }}>Something not working? A verified technician can be at your door soon.</Text>
-        <Button mode="contained" buttonColor="#ffffff" textColor={theme.colors.primary} icon="calendar-plus" onPress={() => router.push('/book')} contentStyle={{ height: 48 }} style={{ borderRadius: 14 }}>
+      <Hero>
+        <Text variant="headlineSmall" style={{ color: theme.app.onGradient, fontWeight: '800' }}>Hi {first} 👋</Text>
+        <Text variant="bodyMedium" style={{ color: theme.app.onGradient, opacity: 0.9 }}>Something not working? A verified technician can be at your door soon.</Text>
+        <Button mode="contained" buttonColor={theme.app.onGradient} textColor={theme.app.gradient[0]} icon="calendar-plus" onPress={() => router.push('/book')} contentStyle={{ height: 50 }} style={{ borderRadius: 14 }} labelStyle={{ fontWeight: '800' }}>
           Book a repair
         </Button>
-      </View>
+      </Hero>
 
       {q.isPending ? <ListSkeleton rows={3} /> : q.isError ? <ErrorState error={q.error} onRetry={() => q.refetch()} /> : (
         <>
@@ -47,7 +49,9 @@ export function CustomerHome() {
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10 }}>
                 {q.data.appliances.map((a) => (
                   <Card key={a.id} style={{ width: 150, gap: 4 }}>
-                    <Icon source="washing-machine" size={26} color={theme.colors.primary} />
+                    <View style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: theme.colors.primaryContainer, alignItems: 'center', justifyContent: 'center', marginBottom: 4 }}>
+                      <Icon source={categoryIcon(a.category.name)} size={24} color={theme.colors.primary} />
+                    </View>
                     <Text variant="titleSmall" style={{ fontWeight: '700' }} numberOfLines={1}>{a.brand}</Text>
                     <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant }} numberOfLines={1}>{a.category.name}</Text>
                   </Card>

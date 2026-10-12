@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ActivityIndicator, PaperProvider, useTheme } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -8,7 +8,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { en, registerTranslation } from 'react-native-paper-dates';
 import { AppearanceProvider, useAppearance } from '@/lib/appearance';
 import { AuthProvider, homeFor, useAuth, type Role } from '@/lib/auth';
-import { darkTheme, lightTheme } from '@/ui/theme';
+import { buildTheme } from '@/ui/theme';
 import { ToastProvider } from '@/ui/toast';
 
 registerTranslation('en', en); // texts for the date and time pickers
@@ -57,14 +57,15 @@ export default function RootLayout() {
   );
 }
 
-// Light or dark from Settings (or the phone's choice, when set to System).
+// Light or dark (or the phone's choice) and the app colour, both from Settings.
 function Themed() {
-  const { dark } = useAppearance();
+  const { dark, palette } = useAppearance();
+  const theme = useMemo(() => buildTheme(palette, dark), [palette, dark]);
   return (
-    <PaperProvider theme={dark ? darkTheme : lightTheme}>
+    <PaperProvider theme={theme}>
       <ToastProvider>
         <AuthProvider>
-          <StatusBar style={dark ? 'light' : 'dark'} />
+          <StatusBar style={theme.app.barDark ? 'light' : 'dark'} />
           <Gate />
         </AuthProvider>
       </ToastProvider>

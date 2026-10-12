@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
-import { Portal, Snackbar, useTheme } from 'react-native-paper';
+import { Portal, Snackbar } from 'react-native-paper';
+import { useAppTheme } from './theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // A small message at the bottom: toast.success("Saved"), toast.error(err.message).
@@ -8,7 +9,7 @@ const Ctx = createContext<Toast>({ success: () => {}, error: () => {} });
 export const useToast = () => useContext(Ctx);
 
 export function ToastProvider({ children }: { children: ReactNode }) {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const insets = useSafeAreaInsets();
   // `key` changes for every message, so the Portal mounts fresh and lands ON TOP of any open sheet or dialog
   // (Paper stacks portals in the order they mount).
@@ -28,7 +29,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             action={{ label: 'OK', onPress: () => setMsg(null) }}
             // Above the bottom tab bar and the phone's own navigation bar.
             wrapperStyle={{ bottom: insets.bottom + 64 }}
-            style={{ backgroundColor: msg.kind === 'error' ? theme.colors.error : '#166534' }}
+            style={{ backgroundColor: msg.kind === 'error' ? theme.colors.error : theme.app.success, borderRadius: 14 }}
             theme={{ colors: { inversePrimary: '#fff', inverseOnSurface: '#fff' } }}
             icon={msg.kind === 'error' ? 'alert-circle' : 'check-circle'}
             onIconPress={() => setMsg(null)}

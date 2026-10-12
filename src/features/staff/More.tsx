@@ -20,7 +20,7 @@ const ITEMS: Item[] = [
   { label: 'Users', hint: 'Managers, technicians and customers', icon: 'account-group-outline', href: '/staff/users', ownerOnly: true },
   { label: 'Audit log', hint: 'Who changed what', icon: 'clipboard-text-clock-outline', href: '/staff/audit', ownerOnly: true },
   { label: 'Roles & permissions', hint: 'What each role can do', icon: 'shield-account-outline', href: '/staff/roles', ownerOnly: true },
-  { label: 'Settings', hint: 'Light or dark mode', icon: 'cog-outline', href: '/staff/settings' },
+  { label: 'Settings', hint: 'Light / dark mode and app colour', icon: 'cog-outline', href: '/staff/settings' },
 ];
 
 export function StaffMore() {

@@ -3,12 +3,14 @@ import { Button, Text } from 'react-native-paper';
 import { usePaymentConfig, useOnlinePayment } from '@/lib/queries/payments';
 import { canPayOnline, openCheckout } from '@/lib/razorpay';
 import { Banner } from '@/ui/Parts';
+import { useAppTheme } from '@/ui/theme';
 import { useToast } from '@/ui/toast';
 
 // The customer pays a completed visit with Razorpay: 1. the server makes the order (it decides the amount),
 // 2. Razorpay's secure screen takes the card / UPI details, 3. the server checks the signature and marks it paid.
 // Hidden when the server has no Razorpay keys, and on the web preview (no native SDK there).
 export function PayOnline({ bookingId, due }: { bookingId: string; due: string }) {
+  const theme = useAppTheme();
   const toast = useToast();
   const config = usePaymentConfig();
   const { start, confirm } = useOnlinePayment(bookingId);
@@ -28,7 +30,7 @@ export function PayOnline({ bookingId, due }: { bookingId: string; due: string }
         name: 'HomeFix',
         description: order.description,
         prefill: order.prefill,
-        theme: { color: '#2563eb' },
+        theme: { color: theme.colors.primary }, // Razorpay's screen in the app colour
       });
       await confirm.mutateAsync({ orderId: result.razorpay_order_id, paymentId: result.razorpay_payment_id, signature: result.razorpay_signature });
       toast.success('Payment successful. Your receipt is ready.');

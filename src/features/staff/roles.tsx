@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { Chip, Icon, Text, useTheme } from 'react-native-paper';
+import { Chip, Icon, Text } from 'react-native-paper';
+import { useAppTheme } from '@/ui/theme';
 import type { Role } from '@/lib/auth';
 import { PERMISSIONS, ROLE_INFO, ROLE_ORDER, type Permission } from '@/lib/permissions';
 import { Card, SectionTitle } from '@/ui/Parts';
 import { Screen } from '@/ui/Screen';
 
 function Access({ p }: { p: Permission }) {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const look = {
-    full: { icon: 'check', label: 'Yes', color: '#16a34a' },
+    full: { icon: 'check', label: 'Yes', color: theme.app.success },
     own: { icon: 'account-outline', label: 'Own only', color: theme.colors.primary },
     none: { icon: 'minus', label: 'No', color: theme.colors.onSurfaceVariant },
   }[p.access];
@@ -27,7 +28,7 @@ function Access({ p }: { p: Permission }) {
 // Read-only: what each role can do. The rules are built in and checked by the server on every request.
 // One role at a time, because a 4-column table does not fit a phone.
 export function RolesScreen() {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const [role, setRole] = useState<Role>('OWNER');
   return (
     <Screen>
