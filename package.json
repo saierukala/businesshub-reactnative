@@ -11,6 +11,8 @@
     "expo-constants": "~57.0.20",
     "expo-dev-client": "~57.0.20",
     "expo-font": "~57.0.4",
+    "expo-image-manipulator": "~57.0.21",
+    "expo-image-picker": "~57.0.20",
     "expo-linear-gradient": "~57.0.2",
     "expo-linking": "~57.0.12",
     "expo-router": "~57.0.26",
@@ -31,6 +33,8 @@
   "devDependencies": {
     "@playwright/test": "^1.63.0",
     "@types/react": "~19.2.2",
+    "eslint": "^9.0.0",
+    "eslint-config-expo": "~57.0.2",
     "typescript": "~6.0.3",
     "vitest": "^4.1.11"
   },
@@ -43,7 +47,8 @@
     "test": "vitest run",
     "e2e": "playwright test",
     "demo": "playwright test -c playwright.demo.config.ts",
-    "shots": "playwright test -c playwright.shots.config.ts"
+    "shots": "playwright test -c playwright.shots.config.ts",
+    "lint": "expo lint"
   },
   "private": true
 }
