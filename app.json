@@ -45,6 +45,12 @@
         }
       ]
     ],
-    "scheme": "businesshub"
+    "scheme": "businesshub",
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "26a6015f-f1c3-43fd-a304-6c02ee6b448e"
+      }
+    }
   }
 }

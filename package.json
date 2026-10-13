@@ -48,7 +48,8 @@
     "e2e": "playwright test",
     "demo": "playwright test -c playwright.demo.config.ts",
     "shots": "playwright test -c playwright.shots.config.ts",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "postinstall": "node scripts/patch-expo-ui.js"
   },
   "private": true
 }
