@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Icon, SegmentedButtons, Text } from 'react-native-paper';
 import { useAppearance, type Mode } from '@/lib/appearance';
+import { versionLabel } from '@/lib/version';
 import { Card, SectionTitle } from '@/ui/Parts';
 import { Screen } from '@/ui/Screen';
 import { PALETTES, alpha, mix, useAppTheme, type PaletteId } from '@/ui/theme';
@@ -68,6 +69,12 @@ export function SettingsScreen() {
       <View style={styles.grid} accessibilityRole="radiogroup" accessibilityLabel="App colour">
         {PALETTES.map((p) => <Swatch key={p.id} id={p.id} selected={palette === p.id} onPress={() => setPalette(p.id)} />)}
       </View>
+
+      <SectionTitle>About</SectionTitle>
+      <Card style={{ gap: 4 }}>
+        <Text variant="titleSmall" style={{ fontWeight: '700' }}>HomeFix</Text>
+        <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }} testID="settings-version">{versionLabel()}</Text>
+      </Card>
     </Screen>
   );
 }

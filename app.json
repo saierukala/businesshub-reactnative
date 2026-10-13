@@ -27,7 +27,8 @@
       },
       "predictiveBackGestureEnabled": false,
       "softwareKeyboardLayoutMode": "resize",
-      "package": "com.anonymous.businesshubreactnative"
+      "package": "com.anonymous.businesshubreactnative",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"

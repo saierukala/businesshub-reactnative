@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { Icon, Text } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { versionLabel } from '@/lib/version';
 import { Screen } from './Screen';
 import { alpha, useAppTheme } from './theme';
 
@@ -32,6 +33,7 @@ export function AuthShell({ title, subtitle, children }: { title: string; subtit
         </View>
         {children}
       </View>
+      <Text variant="labelSmall" style={{ textAlign: 'center', color: theme.colors.onSurfaceVariant, marginBottom: 16 }} testID="app-version">{versionLabel()}</Text>
     </Screen>
   );
 }
