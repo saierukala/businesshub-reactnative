@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>HomeFix Mobile — Setup, Build & Run Guide</title>
+<style>
+  @page { size: A4; margin: 14mm 14mm 16mm 14mm; }
+  :root {
+    --navy: #232f57; --navy-2: #2f3d6e; --coral: #ee8888; --ink: #161a23; --muted: #5b6478;
+    --line: #e3e7f0; --soft: #f3f5fa; --ok: #16a34a; --warn: #b45309; --bad: #dc2626; --info: #2563eb;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; font: 9.6pt/1.5 "Segoe UI", Inter, Roboto, Arial, sans-serif; color: var(--ink); }
+  h1, h2, h3, h4 { line-height: 1.25; margin: 0; }
+  h1 { font-size: 22pt; font-weight: 800; color: var(--navy); margin-bottom: 6pt; }
+  h2 { font-size: 12.5pt; font-weight: 800; color: var(--navy); margin: 12pt 0 5pt; }
+  h3 { font-size: 10.4pt; font-weight: 700; margin: 9pt 0 3pt; }
+  p { margin: 0 0 7pt; }
+  ul, ol { margin: 0 0 8pt; padding-left: 16pt; }
+  li { margin: 2pt 0; }
+  code, .mono { font-family: "Cascadia Code", Consolas, "Courier New", monospace; font-size: 9pt; }
+  :not(pre) > code { background: var(--soft); border: 1px solid var(--line); border-radius: 4px; padding: 0 3pt; }
+  pre { background: #0f1424; color: #e8ecf5; border-radius: 8px; padding: 7pt 10pt; margin: 5pt 0 7pt; font-size: 8.5pt; line-height: 1.5; white-space: pre-wrap; word-break: break-word; break-inside: avoid; }
+  pre .c { color: #8b95b0; }
+  table { width: 100%; border-collapse: collapse; margin: 5pt 0 8pt; font-size: 8.8pt; break-inside: auto; }
+  th { text-align: left; background: var(--navy); color: #fff; font-weight: 700; padding: 4pt 7pt; }
+  td { padding: 3.6pt 7pt; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr { break-inside: avoid; }
+  tr:nth-child(even) td { background: #fafbfd; }
+  .page { break-before: page; }
+  .lead { font-size: 11.5pt; color: var(--muted); }
+  .kicker { font-size: 8.5pt; font-weight: 800; letter-spacing: 1.5pt; text-transform: uppercase; color: var(--coral); margin-bottom: 4pt; }
+
+  /* cover */
+  .cover { height: 265mm; border-radius: 18px; background: linear-gradient(140deg, #232f57 0%, #3c3f6b 55%, #9a6170 100%); color: #fff; padding: 22mm 18mm; position: relative; overflow: hidden; }
+  .cover .logo { width: 58px; height: 58px; border-radius: 18px; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.35); display: flex; align-items: center; justify-content: center; font-size: 30px; }
+  .cover h1 { color: #fff; font-size: 34pt; margin: 18pt 0 6pt; }
+  .cover .sub { font-size: 14pt; opacity: .9; max-width: 120mm; }
+  .cover .meta { position: absolute; left: 18mm; right: 18mm; bottom: 14mm; font-size: 9.5pt; opacity: .85; line-height: 1.7; }
+  .cover .phones { position: absolute; right: 12mm; bottom: 46mm; display: flex; gap: 8mm; align-items: flex-end; }
+  .cover .phones img { width: 44mm; border-radius: 22px; border: 6px solid #0f172a; box-shadow: 0 18px 40px rgba(0,0,0,.35); }
+  .cover .phones img:first-child { width: 39mm; margin-bottom: 12mm; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6pt; margin-top: 16pt; max-width: 110mm; }
+  .chip { background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.3); border-radius: 999px; padding: 3pt 9pt; font-size: 9pt; font-weight: 600; }
+
+  /* boxes */
+  .box { border-radius: 10px; padding: 7pt 10pt; margin: 6pt 0 8pt; border: 1px solid; break-inside: avoid; }
+  .box b.t { display: block; margin-bottom: 3pt; }
+  .tip { background: #eef6ff; border-color: #bcd6fb; }
+  .tip b.t { color: var(--info); }
+  .warn { background: #fff7ea; border-color: #f4d29a; }
+  .warn b.t { color: var(--warn); }
+  .ok { background: #effaf3; border-color: #b6e6c6; }
+  .ok b.t { color: var(--ok); }
+  .bad { background: #fff1f1; border-color: #f5c2c2; }
+  .bad b.t { color: var(--bad); }
+
+  /* steps */
+  .step { display: grid; grid-template-columns: 24pt 1fr; gap: 8pt; margin: 6pt 0; break-inside: avoid; }
+  .num { width: 24pt; height: 24pt; border-radius: 50%; background: var(--navy); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 10pt; margin-top: 1pt; }
+  .step h3 { margin-top: 2pt; }
+  .chapter { display: flex; align-items: center; gap: 10pt; margin-bottom: 8pt; break-after: avoid; }
+  h2, h3 { break-after: avoid; }
+  .flow { margin-top: 16pt; }
+  .shots.sm img { width: 29mm; }
+  .chapter .n { font-size: 30pt; font-weight: 900; color: var(--coral); line-height: 1; }
+  .chapter h1 { margin: 0; }
+
+  /* layout helpers */
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12pt; }
+  .cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10pt; }
+  .card { border: 1px solid var(--line); border-radius: 10px; padding: 9pt 11pt; background: #fff; break-inside: avoid; }
+  .card h3 { margin-top: 0; }
+  .shots { display: flex; gap: 9pt; justify-content: center; margin: 8pt 0 4pt; break-inside: avoid; }
+  .shots figure { margin: 0; text-align: center; font-size: 8.5pt; color: var(--muted); }
+  .shots img { width: 34mm; border-radius: 14px; border: 4px solid #0f172a; display: block; margin-bottom: 4pt; }
+  .toc { columns: 2; column-gap: 14pt; font-size: 10.5pt; }
+  .toc div { display: flex; gap: 8pt; padding: 3pt 0; border-bottom: 1px dotted var(--line); break-inside: avoid; }
+  .toc span.n { color: var(--coral); font-weight: 800; width: 16pt; }
+  .tree { background: var(--soft); border: 1px solid var(--line); border-radius: 10px; padding: 7pt 10pt; font-family: "Cascadia Code", Consolas, monospace; font-size: 8.2pt; line-height: 1.45; white-space: pre; break-inside: avoid; }
+  .tree .d { color: var(--navy); font-weight: 700; }
+  .tree .x { color: var(--muted); font-family: "Segoe UI", Arial, sans-serif; font-size: 8.6pt; }
+  .qa td:first-child { width: 42%; font-weight: 600; }
+  .small { font-size: 9pt; color: var(--muted); }
+  svg text { font-family: "Segoe UI", Arial, sans-serif; }
+  .center { text-align: center; }
+</style>
+</head>
+<body>
+
+<!-- ============================ COVER ============================ -->
+<section class="cover">
+  <div class="logo">🔧</div>
+  <h1>HomeFix Mobile</h1>
+  <div class="sub">The complete beginner's guide: set up the project, run it, build the Android app, test Razorpay payments and record the demo.</div>
+  <div class="chips">
+    <span class="chip">React Native</span><span class="chip">Expo SDK 57</span><span class="chip">TypeScript</span>
+    <span class="chip">Node.js + Express</span><span class="chip">PostgreSQL</span><span class="chip">Razorpay (test)</span><span class="chip">Playwright</span>
+  </div>
+  <div class="meta">
+    Appliance repair booking &amp; field-service app<br>
+    HomeFix Appliance Services, Hyderabad<br>
+    Repositories: github.com/saierukala/businesshub-reactnative · businesshub-backend<br>
+    Version {{VERSION}} · {{DATE}}
+  </div>
+  <div class="phones">
+    <img src="{{img:navy-light-1-login.png}}" alt="">
+    <img src="{{img:navy-light-2-customer-home.png}}" alt="">
+  </div>
+</section>
+
+<!-- ============================ CONTENTS ============================ -->
+<section class="page">
+  <div class="kicker">Inside this guide</div>
+  <h1>Contents</h1>
+  <p class="lead">Read it top to bottom the first time. Every command is written for a Windows PC with PowerShell; nothing is assumed.</p>
+  <div class="toc">
+    <div><span class="n">1</span>What HomeFix is and how the pieces fit</div>
+    <div><span class="n">2</span>What you need before you start</div>
+    <div><span class="n">3</span>Get the code</div>
+    <div><span class="n">4</span>Start the backend (database + API)</div>
+    <div><span class="n">5</span>Set up the mobile app</div>
+    <div><span class="n">6</span>Run it: browser, Expo Go, QR codes</div>
+    <div><span class="n">7</span>Create your Expo account</div>
+    <div><span class="n">8</span>Build the Android app (APK) in the cloud</div>
+    <div><span class="n">9</span>Install the APK on your phone</div>
+    <div><span class="n">10</span>Open the app and connect it to your PC</div>
+    <div><span class="n">11</span>Test online payments with Razorpay</div>
+    <div><span class="n">12</span>Record the phone screen for the demo</div>
+    <div><span class="n">13</span>The project's files: what goes where</div>
+    <div><span class="n">14</span>How one screen works, end to end</div>
+    <div><span class="n">15</span>Important things to know</div>
+    <div><span class="n">16</span>Tests, demo videos and screenshots</div>
+    <div><span class="n">17</span>Command cheat sheet</div>
+    <div><span class="n">18</span>Troubleshooting</div>
+    <div><span class="n">19</span>Glossary</div>
+    <div><span class="n">20</span>Demo logins</div>
+  </div>
+
+  <div class="box tip"><b class="t">How to read the boxes</b>
+    <b style="color:var(--info)">Blue</b> = a helpful tip. <b style="color:var(--warn)">Amber</b> = be careful. <b style="color:var(--ok)">Green</b> = how to check it worked. <b style="color:var(--bad)">Red</b> = never do this.
+    Dark blocks are commands: type them exactly, one line at a time, then press Enter.
+  </div>
+
+  <h2>The short version (once everything is installed)</h2>
+  <pre><span class="c"># Terminal 1 — the backend (API on port 4000)</span>
+cd D:\Projects\BusinessHub-backend
+npm run dev
+
+<span class="c"># Terminal 2 — the mobile app's code server (Metro on port 8081)</span>
+cd D:\Projects\businesshub-reactnative
+npx expo start
+
+<span class="c"># Phone — open the HomeFix app (or Expo Go), tap your PC's server, log in.</span></pre>
+</section>
+
+<!-- ============================ 1. OVERVIEW ============================ -->
+<section class="page">
+  <div class="chapter"><span class="n">1</span><h1>What HomeFix is and how the pieces fit</h1></div>
+  <p>HomeFix is a booking and field-service app for an appliance repair business. <b>Customers</b> book a repair and pay, <b>technicians</b> run their visits, and the <b>owner and manager</b> run the business. All of it lives in one phone app; each person sees only their own area after logging in.</p>
+
+  <div class="shots sm">
+    <figure><img src="{{img:navy-light-3-wizard-step-4.png}}">Customer: book a repair</figure>
+    <figure><img src="{{img:navy-light-5-technician-job.png}}">Technician: the job</figure>
+    <figure><img src="{{img:navy-light-6-staff-dashboard.png}}">Owner / manager: dashboard</figure>
+  </div>
+
+  <h2>Three projects (three Git repositories)</h2>
+  <table>
+    <tr><th>Repository</th><th>What it is</th><th>Needed for the phone app?</th></tr>
+    <tr><td><b>businesshub-backend</b></td><td>The server (API): Node.js, Express, TypeScript, PostgreSQL via Prisma. Every rule and every amount is decided here.</td><td><b>Yes</b> — the app cannot work without it.</td></tr>
+    <tr><td><b>businesshub-reactnative</b></td><td>The phone app: React Native with Expo, for customers, technicians and staff. <b>This guide is about this one.</b></td><td>Yes — it is the app.</td></tr>
+    <tr><td>businesshub-frontend</td><td>The website (Next.js). Same backend, same rules.</td><td>No. Optional.</td></tr>
+  </table>
+
+  <h2>How they talk to each other</h2>
+  <svg viewBox="0 0 700 300" width="100%" height="228">
+    <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5b6478"/></marker></defs>
+    <rect x="10" y="40" width="170" height="210" rx="22" fill="#232f57"/>
+    <rect x="22" y="58" width="146" height="174" rx="12" fill="#f3f5fa"/>
+    <text x="95" y="95" text-anchor="middle" font-size="15" font-weight="800" fill="#232f57">Your phone</text>
+    <text x="95" y="118" text-anchor="middle" font-size="11.5" fill="#5b6478">HomeFix app (APK)</text>
+    <text x="95" y="135" text-anchor="middle" font-size="11.5" fill="#5b6478">or Expo Go</text>
+    <text x="95" y="170" text-anchor="middle" font-size="10.5" fill="#5b6478">Logged-in token kept</text>
+    <text x="95" y="185" text-anchor="middle" font-size="10.5" fill="#5b6478">in the phone's secure</text>
+    <text x="95" y="200" text-anchor="middle" font-size="10.5" fill="#5b6478">keystore</text>
+    <rect x="270" y="20" width="250" height="250" rx="14" fill="#fff" stroke="#c7cdda" stroke-width="1.5"/>
+    <text x="395" y="45" text-anchor="middle" font-size="15" font-weight="800" fill="#232f57">Your PC (same Wi-Fi)</text>
+    <rect x="290" y="62" width="210" height="52" rx="10" fill="#eef1f8"/>
+    <text x="395" y="84" text-anchor="middle" font-size="12.5" font-weight="700" fill="#161a23">Metro / Expo server · :8081</text>
+    <text x="395" y="102" text-anchor="middle" font-size="10.5" fill="#5b6478">sends the app's screens (JavaScript)</text>
+    <rect x="290" y="128" width="210" height="52" rx="10" fill="#eef1f8"/>
+    <text x="395" y="150" text-anchor="middle" font-size="12.5" font-weight="700" fill="#161a23">Backend API · :4000</text>
+    <text x="395" y="168" text-anchor="middle" font-size="10.5" fill="#5b6478">rules, prices, availability, logins</text>
+    <rect x="290" y="194" width="98" height="58" rx="10" fill="#e7f0ff"/>
+    <text x="339" y="218" text-anchor="middle" font-size="11.5" font-weight="700" fill="#161a23">PostgreSQL</text>
+    <text x="339" y="235" text-anchor="middle" font-size="10" fill="#5b6478">the data</text>
+    <rect x="402" y="194" width="98" height="58" rx="10" fill="#e7f0ff"/>
+    <text x="451" y="218" text-anchor="middle" font-size="11.5" font-weight="700" fill="#161a23">Worker</text>
+    <text x="451" y="235" text-anchor="middle" font-size="10" fill="#5b6478">notifications</text>
+    <line x1="395" y1="180" x2="395" y2="192" stroke="#5b6478" stroke-width="1.5" marker-end="url(#a)"/>
+    <rect x="575" y="40" width="115" height="70" rx="12" fill="#fff4f4" stroke="#ee8888"/>
+    <text x="632" y="70" text-anchor="middle" font-size="13" font-weight="800" fill="#232f57">Razorpay</text>
+    <text x="632" y="88" text-anchor="middle" font-size="10" fill="#5b6478">payments (test)</text>
+    <rect x="575" y="170" width="115" height="80" rx="12" fill="#f3f5fa" stroke="#c7cdda"/>
+    <text x="632" y="200" text-anchor="middle" font-size="13" font-weight="800" fill="#232f57">Expo (EAS)</text>
+    <text x="632" y="218" text-anchor="middle" font-size="10" fill="#5b6478">builds the APK</text>
+    <text x="632" y="233" text-anchor="middle" font-size="10" fill="#5b6478">in the cloud</text>
+    <line x1="182" y1="90" x2="286" y2="88" stroke="#5b6478" stroke-width="1.5" marker-end="url(#a)"/>
+    <line x1="182" y1="155" x2="286" y2="155" stroke="#5b6478" stroke-width="1.5" marker-end="url(#a)" marker-start="url(#a)"/>
+    <text x="232" y="80" text-anchor="middle" font-size="10" fill="#5b6478">screens</text>
+    <text x="232" y="147" text-anchor="middle" font-size="10" fill="#5b6478">data</text>
+    <line x1="522" y1="150" x2="572" y2="85" stroke="#ee8888" stroke-width="1.5" marker-end="url(#a)"/>
+    <path d="M95 252 C 140 292, 520 292, 572 225" fill="none" stroke="#c7cdda" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#a)"/>
+    <text x="330" y="292" text-anchor="middle" font-size="10" fill="#5b6478">the APK is built once by Expo, then installed on the phone</text>
+  </svg>
+
+  <div class="box tip"><b class="t">The one idea to remember</b>
+    The phone only <b>shows</b> things and <b>sends</b> what the user picked. The backend decides everything: who may do what, which times are free, every price and every allowed status change. That is why the backend must be running for the app to work.</div>
+</section>
+
+<!-- ============================ 2. PREREQUISITES ============================ -->
+<section class="page">
+  <div class="chapter"><span class="n">2</span><h1>What you need before you start</h1></div>
+  <table>
+    <tr><th>Thing</th><th>Why</th><th>Where to get it</th></tr>
+    <tr><td><b>Windows PC</b> (Mac/Linux also work)</td><td>Runs the backend and the app's code server.</td><td>—</td></tr>
+    <tr><td><b>Node.js</b> 22 LTS or newer</td><td>Runs JavaScript/TypeScript tools (npm, npx, Expo).</td><td>nodejs.org → LTS installer. Check: <code>node -v</code></td></tr>
+    <tr><td><b>Git</b></td><td>Downloads the code.</td><td>git-scm.com. Check: <code>git --version</code></td></tr>
+    <tr><td><b>PostgreSQL</b> 16 or newer</td><td>The database. Remember the password you set for the user <code>postgres</code>.</td><td>postgresql.org/download/windows</td></tr>
+    <tr><td><b>An Android phone</b></td><td>To run the app. Same Wi-Fi as the PC.</td><td>—</td></tr>
+    <tr><td><b>Expo Go</b> app (optional)</td><td>Quick way to run the app without building it. No online payment in Expo Go.</td><td>Play Store → "Expo Go"</td></tr>
+    <tr><td><b>Expo account</b> (free)</td><td>Needed to build the real APK in Expo's cloud.</td><td>expo.dev/signup (chapter 7)</td></tr>
+    <tr><td><b>Razorpay account</b> (free, optional)</td><td>Test keys for "Pay online". No real money.</td><td>dashboard.razorpay.com → Test Mode → API Keys</td></tr>
+    <tr><td>VS Code (optional)</td><td>A good editor to read the code.</td><td>code.visualstudio.com</td></tr>
+  </table>
+
+  <h2>Words you will see a lot</h2>
+  <div class="cols">
+    <div class="card"><h3>Terminal</h3>The window where you type commands. On Windows: press Start, type <b>PowerShell</b>, open it. You often need two or three terminals open at once.</div>
+    <div class="card"><h3>npm / npx</h3><code>npm install</code> downloads the project's libraries. <code>npm run dev</code> runs a script from <code>package.json</code>. <code>npx tool</code> runs a tool without installing it.</div>
+    <div class="card"><h3>.env file</h3>A small text file with settings and secrets (passwords, keys). Each project has a <code>.env.example</code>; you copy it to <code>.env</code> and fill it in. Never shared on GitHub.</div>
+    <div class="card"><h3>IP address</h3>Your PC's address on the Wi-Fi, like <code>192.168.1.5</code>. The phone uses it to reach the PC. It can change, so check it each day.</div>
+  </div>
+</section>
+
+<!-- ============================ 3. GET THE CODE ============================ -->
+<section class="page">
+  <div class="chapter"><span class="n">3</span><h1>Get the code</h1></div>
+  <p>Put the projects <b>next to each other in one folder</b>. The mobile app's tests look for the backend in the folder beside it.</p>
+  <pre><span class="c"># Make a folder for the projects and go into it</span>
+mkdir D:\Projects
+cd D:\Projects
+
+<span class="c"># Download the backend and the phone app</span>
+git clone https://github.com/saierukala/businesshub-backend.git BusinessHub-backend
+git clone https://github.com/saierukala/businesshub-reactnative.git businesshub-reactnative</pre>
+  <div class="box ok"><b class="t">Check</b>You now have <code>D:\Projects\BusinessHub-backend</code> and <code>D:\Projects\businesshub-reactnative</code>.</div>
+
+  <!-- ============================ 4. BACKEND ============================ -->
+  <div class="chapter" style="margin-top:18pt"><span class="n">4</span><h1>Start the backend (database + API)</h1></div>
+
+  <div class="step"><div class="num">1</div><div><h3>Install its libraries</h3>
+    <pre>cd D:\Projects\BusinessHub-backend
+npm install</pre></div></div>
+
+  <div class="step"><div class="num">2</div><div><h3>Create the settings file</h3>
+    <pre>copy .env.example .env
+notepad .env</pre>
+    <p>In Notepad, change these lines and save:</p>
+    <table>
+      <tr><th>Setting</th><th>What to put</th></tr>
+      <tr><td><code>DATABASE_URL</code></td><td>Replace <code>YOUR_PASSWORD</code> with your PostgreSQL password. The database <code>businesshub</code> is created for you.</td></tr>
+      <tr><td><code>TEST_DATABASE_URL</code></td><td>Same password. Used only by the tests (it gets wiped).</td></tr>
+      <tr><td><code>JWT_SECRET</code></td><td>A long random string. Make one with:<br><code>node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"</code></td></tr>
+      <tr><td><code>RAZORPAY_KEY_ID</code>, <code>RAZORPAY_KEY_SECRET</code></td><td>Optional. Your Razorpay <b>test</b> keys (<code>rzp_test_…</code>). Empty = "Pay online" is hidden.</td></tr>
+      <tr><td><code>SMTP_URL</code></td><td>Leave empty. Emails are printed in the terminal instead of sent.</td></tr>
+    </table></div></div>
+
+  <div class="step"><div class="num">3</div><div><h3>Create the database tables and demo data</h3>
+    <pre>npx prisma migrate dev
+npm run seed</pre>
+    <p><code>migrate</code> builds the tables, including the rule that makes double booking impossible. <code>seed</code> adds demo users, services and a customer (logins in chapter 20).</p></div></div>
+
+  <div class="step"><div class="num">4</div><div><h3>Run the API (keep this terminal open)</h3>
+    <pre>npm run dev</pre>
+    <p>Optional, in another terminal, for in-app notifications: <code>npm run worker</code></p></div></div>
+
+  <div class="box ok"><b class="t">Check</b>Open <code>http://localhost:4000/health</code> in a browser. You should see <code>{"status":"ok", …}</code>. The full API documentation is at <code>http://localhost:4000/docs</code>.</div>
+</section>
+
+<!-- ============================ 5. MOBILE SETUP ============================ -->
+<section class="flow">
+  <div class="chapter"><span class="n">5</span><h1>Set up the mobile app</h1></div>
+
+  <div class="step"><div class="num">1</div><div><h3>Install its libraries</h3>
+    <pre>cd D:\Projects\businesshub-reactnative
+npm install</pre>
+    <p>At the end you will see <code>patch-expo-ui: patched ExpoUIModule.kt</code>. That is expected: a small fix for an Expo bug runs automatically after every install (chapter 15).</p></div></div>
+
+  <div class="step"><div class="num">2</div><div><h3>Find your PC's IP address</h3>
+    <pre>ipconfig</pre>
+    <p>Look under <b>Wireless LAN adapter Wi-Fi</b> for <b>IPv4 Address</b>, for example <code>10.166.62.82</code>.</p></div></div>
+
+  <div class="step"><div class="num">3</div><div><h3>Tell the app where the backend is</h3>
+    <pre>copy .env.example .env
+notepad .env</pre>
+    <p>Set the one line to your IP and port 4000, then save:</p>
+    <pre>EXPO_PUBLIC_API_URL=http://10.166.62.82:4000</pre>
+    <div class="box warn"><b class="t">Why not "localhost"?</b>On the phone, "localhost" means the phone itself. The phone must use the PC's Wi-Fi address. If you use the Android emulator instead, use <code>http://10.0.2.2:4000</code>.</div></div></div>
+
+  <div class="step"><div class="num">4</div><div><h3>Let the phone reach the PC</h3>
+    <ul>
+      <li>Phone and PC on the <b>same Wi-Fi</b>.</li>
+      <li>Windows Settings → Network → your Wi-Fi → set it to <b>Private</b>.</li>
+      <li>The first time Node.js asks "Allow access?", tick <b>Private networks</b> and allow.</li>
+    </ul>
+    <div class="box ok"><b class="t">Check</b>On the <b>phone's</b> browser open <code>http://&lt;your IP&gt;:4000/health</code>. It must show <code>{"status":"ok"…}</code>. If it doesn't load, nothing else will work yet: see Troubleshooting.</div>
+    <div class="box tip"><b class="t">Office or college Wi-Fi?</b>Many of these block devices from talking to each other. Turn on your phone's <b>hotspot</b>, connect the PC to it, run <code>ipconfig</code> again and update <code>.env</code> with the new IP.</div></div></div>
+</section>
+
+<!-- ============================ 6. RUN ============================ -->
+<section class="page">
+  <div class="chapter"><span class="n">6</span><h1>Run it: browser, Expo Go, QR codes</h1></div>
+  <p>There are three ways to run the app. Start with the browser or Expo Go; build the real app (chapter 8) when you want online payments.</p>
+  <table>
+    <tr><th>Way</th><th>Good for</th><th>Pay online?</th></tr>
+    <tr><td><b>Browser preview</b></td><td>Quick look on the PC, the automated tests.</td><td>No (hidden)</td></tr>
+    <tr><td><b>Expo Go</b> (Play Store app)</td><td>Running on your phone in 2 minutes, no build.</td><td>No (hidden)</td></tr>
+    <tr><td><b>Development build</b> (your own APK)</td><td>Everything, including Razorpay. The way to record the demo.</td><td><b>Yes</b></td></tr>
+  </table>
+
+  <h2>A. Browser preview (PC only)</h2>
+  <pre>npm run web -- --port 3000</pre>
+  <p>Opens the app in a phone-like browser page. Use port 3000: the backend only accepts browsers from the address in its <code>FRONTEND_URL</code> setting.</p>
+
+  <h2>B. Expo Go on your phone</h2>
+  <div class="step"><div class="num">1</div><div>Install <b>Expo Go</b> from the Play Store.</div></div>
+  <div class="step"><div class="num">2</div><div>On the PC: <code>npx expo start</code>. A big <b>QR code</b> appears in the terminal.</div></div>
+  <div class="step"><div class="num">3</div><div>Open <b>Expo Go → Scan QR code</b> and point the camera at the terminal. The first load takes about a minute (a progress bar), then the HomeFix login appears.</div></div>
+
+  <h2>Two different QR codes — don't mix them up</h2>
+  <table>
+    <tr><th>QR code</th><th>Where you see it</th><th>What it does</th><th>How often</th></tr>
+    <tr><td><b>Server QR</b></td><td>The terminal running <code>npx expo start</code></td><td>Opens your <b>code</b> from the PC inside Expo Go or the HomeFix app</td><td>Every time you open the app</td></tr>
+    <tr><td><b>Build QR</b></td><td>The end of an EAS build, and its page on expo.dev</td><td><b>Downloads and installs the APK</b></td><td>Once per new build</td></tr>
+  </table>
+  <div class="box tip"><b class="t">Useful keys in the Expo terminal</b><code>r</code> reload the app · <code>m</code> open the developer menu · <code>j</code> debugger · <code>Ctrl+C</code> stop the server.</div>
+</section>
+
+<!-- ============================ 7. EXPO ACCOUNT ============================ -->
+<section class="page">
+  <div class="chapter"><span class="n">7</span><h1>Create your Expo account</h1></div>
+  <p><b>Expo</b> makes the tools this app is built with. <b>EAS</b> (Expo Application Services) is their cloud: it turns the project into a real Android app (an <b>APK</b>) on their computers, so you don't need Android Studio.</p>
+  <div class="step"><div class="num">1</div><div><h3>Sign up</h3>Go to <b>expo.dev/signup</b>, choose a username, email and password, then confirm the email Expo sends you.</div></div>
+  <div class="step"><div class="num">2</div><div><h3>Ignore the welcome page</h3>After signing up, Expo shows "Get your project started" with <code>npx create-expo-app</code>. <b>Don't run it</b> — that makes a new empty app. You already have the project. Close the page.</div></div>
+  <div class="step"><div class="num">3</div><div><h3>Log in from the terminal</h3>
+    <pre>cd D:\Projects\businesshub-reactnative
+npx eas-cli@latest login</pre>
+    <p>It may open your browser: log in there and you'll see <b>"Authentication successful"</b>. The terminal then says <b>Logged in</b>.</p></div></div>
+  <div class="box warn"><b class="t">"Your username, email, or password was incorrect"</b>This is your <b>Expo</b> password (not Gmail, not GitHub, not the app's login). If you signed up with Google or GitHub, set a password with "Forgot password?" on expo.dev, or use the browser login above.</div>
+  <h2>What happens on expo.dev</h2>
+  <ul>
+    <li>The first build creates a <b>project</b> called <code>businesshub-reactnative</code> under your account and writes its ID into <code>app.json</code> (<code>extra.eas.projectId</code>). Commit that change.</li>
+    <li>Expo creates and keeps the app's <b>signing key</b> (keystore). Android only installs signed apps, and every update must be signed with the same key — so let Expo keep it.</li>
+    <li>Every build gets a page with live logs, a <b>QR code</b> and an <b>Install</b> button. Your builds list: expo.dev → your project → <b>Builds</b>.</li>
+    <li>The free plan builds in a shared queue (a few minutes' wait is normal) and includes a limited number of builds each month — see expo.dev/pricing.</li>
+  </ul>
+</section>
+
+<!-- ============================ 8. BUILD ============================ -->
+<section class="page">
+  <div class="chapter"><span class="n">8</span><h1>Build the Android app (APK) in the cloud</h1></div>
+  <p>You need a build only the first time, and again when a library with <b>native code</b> is added (for example the Razorpay, camera or photo libraries). Normal screen changes don't need a new build: the app gets them from your PC.</p>
+
+  <div class="step"><div class="num">1</div><div><h3>Bump the version (every new build)</h3>
+    In <code>app.json</code>, raise <code>"version"</code> (1.0.0 → 1.0.1) and <code>"android" → "versionCode"</code> (1 → 2). The app shows them on the login screen and in Settings → About, so you always know which build is on the phone.</div></div>
+
+  <div class="step"><div class="num">2</div><div><h3>Start the build</h3>
+    <pre>npx eas-cli@latest build --profile development --platform android</pre></div></div>
+
+  <div class="step"><div class="num">3</div><div><h3>Answer its questions (first time only)</h3>
+    <table class="qa">
+      <tr><th>It asks</th><th>Answer</th></tr>
+      <tr><td>Need to install eas-cli… Ok to proceed?</td><td><code>y</code></td></tr>
+      <tr><td>Which account should own this project?</td><td>Your personal account → Enter</td></tr>
+      <tr><td>Create an EAS project for @you/businesshub-reactnative?</td><td><code>Y</code></td></tr>
+      <tr><td>Generate a new Android Keystore?</td><td><code>Y</code> (Expo keeps it safe)</td></tr>
+      <tr><td>Install and run the build on an emulator?</td><td><code>n</code> (you'll use your phone)</td></tr>
+    </table></div></div>
+
+  <h2>What happens while you wait (15–20 minutes)</h2>
+  <table>
+    <tr><th>Stage</th><th>What it means</th></tr>
+    <tr><td>Compressing and uploading</td><td>Your project (without <code>node_modules</code> and ignored files) goes to Expo, about 1–2 MB.</td></tr>
+    <tr><td>Computing the project fingerprint</td><td>A summary of the native parts, to tell builds apart. Can take a minute; "taking longer than expected" is normal.</td></tr>
+    <tr><td>In queue</td><td>Waiting for a free build machine (free plan).</td></tr>
+    <tr><td>Install dependencies</td><td><code>npm install</code> on Expo's machine; our Expo fix (<code>scripts/patch-expo-ui.js</code>) runs here too.</td></tr>
+    <tr><td>Prebuild</td><td>Expo generates the native Android project from <code>app.json</code> and the libraries.</td></tr>
+    <tr><td>Run gradlew</td><td>The Android compiler builds and signs the APK. The longest part.</td></tr>
+    <tr><td>Build finished</td><td>You get a link and a QR code to install it.</td></tr>
+  </table>
+  <div class="box tip"><b class="t">Don't want to wait in the terminal?</b>Add <code>--no-wait</code>: it uploads, prints the build page link and returns. Watch the build on expo.dev; the page shows <b>Install</b> when it's done.</div>
+  <div class="box warn"><b class="t">"adb executable doesn't seem to work … spawn adb ENOENT"</b>Appears only if you answered yes to "run on an emulator" and Android Studio isn't installed. The build itself <b>succeeded</b>; install it on the phone instead.</div>
+</section>
+
+<!-- ============================ 9. INSTALL ============================ -->
+<section class="page">
+  <div class="chapter"><span class="n">9</span><h1>Install the APK on your phone</h1></div>
+  <div class="step"><div class="num">1</div><div><h3>Open the build link on the phone</h3>Scan the <b>build QR</b> with the phone camera, or open the link from the terminal / expo.dev build page in the phone's browser. Log in to Expo if asked.</div></div>
+  <div class="step"><div class="num">2</div><div><h3>Tap Install (or Download)</h3>A file like <code>application-….apk</code> downloads.</div></div>
+  <div class="step"><div class="num">3</div><div><h3>Open the file</h3>From the download notification, or <b>Files → Downloads</b>.</div></div>
+  <div class="step"><div class="num">4</div><div><h3>Allow installs from this source</h3>Android asks once: turn on <b>Allow from this source</b> for your browser, go back, tap <b>Install</b>.</div></div>
+  <div class="step"><div class="num">5</div><div><h3>Play Protect warning</h3>Apps that don't come from the Play Store get a warning. Tap <b>More details → Install anyway</b>. This is normal for your own test builds.</div></div>
+  <div class="box ok"><b class="t">Check</b>A <b>HomeFix</b> app appears in your app list, next to Expo Go.</div>
+  <div class="box tip"><b class="t">A newer build?</b>Install it the same way. Android calls it an <b>update</b> and keeps your login.</div>
+  <div class="box warn"><b class="t">This is a development build</b>It gets its screens from your PC, so the PC must be on with the backend and <code>npx expo start</code> running, on the same Wi-Fi. It is for testing and recording — not for giving to customers. A stand-alone app needs a "preview/production" build and a deployed backend.</div>
+
+  <!-- ============================ 10. CONNECT ============================ -->
+  <div class="chapter" style="margin-top:16pt"><span class="n">10</span><h1>Open the app and connect it to your PC</h1></div>
+  <div class="step"><div class="num">1</div><div>On the PC: backend running (<code>npm run dev</code>) and the code server: <code>npx expo start</code> in the mobile folder.</div></div>
+  <div class="step"><div class="num">2</div><div>Open <b>HomeFix</b>. It shows <b>Development servers</b>: tap <code>http://&lt;your IP&gt;:8081</code>. Not listed? Scan the <b>server QR</b> in the terminal, or tap <b>Enter URL manually</b>.</div></div>
+  <div class="step"><div class="num">3</div><div>Wait about a minute for the first load. The terminal prints <code>Android Bundled …</code>. The Navy login screen appears.</div></div>
+  <div class="step"><div class="num">4</div><div>Under the login form: <b>Version 1.0.0 (build 1) · code ef852c7, 13 Oct, 6:25 pm</b>. The first part is the installed APK, the second is the code your PC is serving.</div></div>
+</section>
+
+<!-- ============================ 11. RAZORPAY ============================ -->
+<section class="page">
+  <div class="chapter"><span class="n">11</span><h1>Test online payments with Razorpay</h1></div>
+  <p>Customers can pay a <b>completed</b> visit online. The server creates the Razorpay order and decides the amount, Razorpay's own secure screen takes the card/UPI/bank details, and the server checks Razorpay's signature before marking the booking paid. In <b>test mode</b> no real money moves.</p>
+
+  <h2>Before you start</h2>
+  <ul>
+    <li>Backend <code>.env</code> has <code>RAZORPAY_KEY_ID=rzp_test_…</code> and <code>RAZORPAY_KEY_SECRET</code>. Live keys (<code>rzp_live_…</code>) are refused on purpose.</li>
+    <li>You are using the <b>HomeFix development build</b> (not Expo Go, not the browser).</li>
+    <li>There is a booking that is <b>Completed</b> and <b>not paid</b>: the technician pressed "Complete visit" but not "Payment received".</li>
+  </ul>
+
+  <h2>Make a booking to pay (with the demo accounts)</h2>
+  <ol>
+    <li><b>Customer</b> (ravi@example.test) books a repair.</li>
+    <li><b>Manager</b> (manager@homefix.test) opens it → <b>Assign technician</b> → Rahul.</li>
+    <li><b>Technician</b> (rahul@homefix.test) opens the job → <b>I'm on my way → I've arrived → Start work</b>, fills "What did you find?" and "What did you do?" → <b>Complete visit</b>. Stop here.</li>
+  </ol>
+
+  <h2>Pay</h2>
+  <ol>
+    <li>Log in as the <b>Customer</b> → <b>Bookings</b> → the completed booking.</li>
+    <li>Under <b>Payment</b>: a yellow <b>Test mode</b> note and <b>Pay ₹… online</b>. Tap it.</li>
+    <li>In Razorpay: <b>UPI</b> → <code>success@razorpay</code>, or <b>Netbanking</b> → any bank → <b>Success</b> on the test bank page.</li>
+    <li>Back in the app: <b>"Payment successful"</b>, the booking shows <b>Paid ₹… by online</b> and <b>View receipt</b>.</li>
+  </ol>
+  <div class="box tip"><b class="t">Try a failed payment too</b>Use <code>failure@razorpay</code> (or <b>Failure</b> on the bank page). You see an error, the booking stays unpaid, and you can pay again.</div>
+  <div class="box ok"><b class="t">Check</b>The receipt has a receipt number (RC-…), the online payment reference (pay_…) and the right total. Staff see the same payment on the website and in the app.</div>
+  <div class="box bad"><b class="t">Never</b>Put live Razorpay keys, real card numbers or the <code>.env</code> file in Git, chats or screenshots.</div>
+</section>
+
+<!-- ============================ 12. RECORD ============================ -->
+<section class="page">
+  <div class="chapter"><span class="n">12</span><h1>Record the phone screen for the demo</h1></div>
+  <h2>Prepare the phone</h2>
+  <ul>
+    <li><b>Same look as the other clips:</b> in the app, Account → <b>Settings</b> → <b>Light</b>, app colour <b>Navy</b>.</li>
+    <li><b>Hide the developer gear:</b> the grey round button at the bottom right is Expo's developer tools. Open the developer menu (shake the phone, or press <code>m</code> in the Expo terminal) and turn off its floating button option before recording.</li>
+    <li>Turn on <b>Do not disturb</b> so no notifications appear.</li>
+    <li>Quick Settings (swipe down twice) → add <b>Screen record</b> with the pencil icon if it's missing.</li>
+  </ul>
+  <h2>Record</h2>
+  <ol>
+    <li>Open the screen you start on, then Quick Settings → <b>Screen record</b> → <b>no audio</b> → Start.</li>
+    <li>Move slowly: pause a second on each screen so viewers can read it.</li>
+    <li>Stop from the notification. The video is in Gallery / Photos.</li>
+  </ol>
+  <div class="box warn"><b class="t">Send the original, not WhatsApp</b>WhatsApp shrinks videos (to about 480 pixels wide). Copy the file with a USB cable, Google Drive or Nearby Share to keep it sharp.</div>
+  <div class="box tip"><b class="t">Making it match the Playwright clips</b>The phone clip is placed in the same phone frame on the same HD background as the generated clips, with the status bar cropped and the end trimmed. The finished clips and the voiceover script are listed in <code>docs/linkedin-video-script.md</code>.</div>
+
+  <h2>The demo clips in order</h2>
+  <table>
+    <tr><th>#</th><th>Clip</th><th>Length</th></tr>
+    <tr><td>1</td><td>01 Customer books a repair</td><td>46 s</td></tr>
+    <tr><td>2</td><td>02 Manager assigns a technician</td><td>16 s</td></tr>
+    <tr><td>3</td><td>03 Technician on the job</td><td>21 s</td></tr>
+    <tr><td>4</td><td>04 Customer approves the extra charge</td><td>17 s</td></tr>
+    <tr><td>5</td><td>05 Technician completes the visit</td><td>22 s</td></tr>
+    <tr><td>6</td><td>05b Customer pays online (real phone)</td><td>31 s</td></tr>
+    <tr><td>7</td><td>06 Manager books for a phone-only customer</td><td>34 s</td></tr>
+    <tr><td>8</td><td>07 Owner dashboard and reports</td><td>14 s</td></tr>
+    <tr><td>9</td><td>08 Roles and permissions</td><td>14 s</td></tr>
+    <tr><td>10</td><td>09 Settings: dark mode</td><td>16 s</td></tr>
+  </table>
+</section>
+
+<!-- ============================ 13. FILES ============================ -->
+<section class="page">
+  <div class="chapter"><span class="n">13</span><h1>The project's files: what goes where</h1></div>
+  <p>The mobile repository, <code>businesshub-reactnative</code>. Folders are in bold; the grey text says what lives there.</p>
+<div class="tree"><span class="d">app/</span>                     <span class="x">Every file here is a SCREEN (Expo Router: the file path is the screen's address)</span>
+  _layout.tsx             <span class="x">The root: theme, login check, sends each role to its own area</span>
+  <span class="d">(auth)/</span>                 <span class="x">Logged-out screens: login, register, forgot password, "I have a code"</span>
+  <span class="d">(customer)/</span>             <span class="x">Customer area</span>
+    <span class="d">(tabs)/</span>               <span class="x">Bottom tabs: home, bookings, book, account</span>
+    bookings/[id]/        <span class="x">One booking ([id] = the booking's id) and its receipt</span>
+  <span class="d">(tech)/</span>                 <span class="x">Technician area: today's jobs, the job screen, receipt</span>
+  <span class="d">(staff)/</span>                <span class="x">Owner / manager area: dashboard, bookings, customers, technicians,</span>
+                          <span class="x">reports, reviews, users, services, audit log, roles, settings</span>
+<span class="d">src/</span>                     <span class="x">Everything that is not a screen file</span>
+  <span class="d">features/</span>               <span class="x">The real screen content, grouped by topic</span>
+    booking/              <span class="x">Booking wizard, slot picker, booking detail, payment, receipt, Pay online</span>
+    staff/                <span class="x">Dashboard, customers, technicians, reports, users, roles…</span>
+    tech.tsx              <span class="x">The technician's day and job screen</span>
+    Settings.tsx          <span class="x">Light/dark mode, app colour, About (version)</span>
+  <span class="d">lib/</span>                    <span class="x">Logic without UI</span>
+    api.ts                <span class="x">The ONE place that calls the backend (adds the login token)</span>
+    auth.tsx              <span class="x">Who is logged in; login and logout</span>
+    <span class="d">queries/</span>              <span class="x">One file per topic: "get bookings", "assign technician"… (TanStack Query)</span>
+    <span class="d">schemas/</span>              <span class="x">Form rules with Zod (e.g. phone must be 10 digits)</span>
+    format.ts             <span class="x">Dates, times (always India time), money</span>
+    appearance.tsx        <span class="x">Saves light/dark and app colour on the phone</span>
+    razorpay.native.ts    <span class="x">Pay online on a real phone;  razorpay.ts = the browser stand-in</span>
+    version.ts            <span class="x">The version line on the login screen and in Settings</span>
+  <span class="d">ui/</span>                     <span class="x">Reusable building blocks</span>
+    theme.ts              <span class="x">ALL colours: the 8 app colours, light and dark, status colours</span>
+    Parts.tsx             <span class="x">Card, Hero, StatCard, StatusChip, EmptyState, lists, dialogs</span>
+    Form.tsx              <span class="x">Text fields, choice lists, buttons</span>
+    nav.tsx               <span class="x">Header, bottom tab bar, notification bell</span>
+<span class="d">e2e/</span>                     <span class="x">Playwright end-to-end tests (one per path), run on phone-sized browsers</span>
+<span class="d">demo/</span>                    <span class="x">Video recorder (npm run demo) and screenshot maker (npm run shots)</span>
+<span class="d">scripts/</span>                 <span class="x">patch-expo-ui.js: the automatic fix for an Expo crash</span>
+<span class="d">docs/</span>                    <span class="x">This guide, the LinkedIn video script</span>
+<span class="d">assets/</span>                  <span class="x">App icon and splash images</span>
+app.json                  <span class="x">App name, version, icon, permissions, plugins</span>
+app.config.js             <span class="x">Adds the git commit and build time to app.json</span>
+eas.json                  <span class="x">How Expo builds the APK (the "development" profile)</span>
+package.json              <span class="x">Libraries and the npm run … scripts</span>
+.env                      <span class="x">Your backend address (never in Git)</span></div>
+
+  <h3>The backend, in one look</h3>
+<div class="tree"><span class="d">src/routes/</span>      <span class="x">URLs (e.g. POST /bookings) and their input checks</span>
+<span class="d">src/controllers/</span> <span class="x">Read the request, call a service, send the answer</span>
+<span class="d">src/services/</span>    <span class="x">ALL business rules (booking, availability, payments, visits)</span>
+<span class="d">src/db/</span>          <span class="x">Database connection (Prisma)</span>
+<span class="d">src/jobs/</span>        <span class="x">Background work: notifications, reminders (npm run worker)</span>
+<span class="d">prisma/</span>          <span class="x">schema.prisma (the tables), migrations, seed.ts (demo data)</span></div>
+</section>
+
+<!-- ============================ 14. FLOW ============================ -->
+<section class="page">
+  <div class="chapter"><span class="n">14</span><h1>How one screen works, end to end</h1></div>
+  <p>Example: the customer taps <b>Confirm booking</b>.</p>
+  <svg viewBox="0 0 700 250" width="100%" height="235">
+    <defs><marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#ee8888"/></marker></defs>
+    <g font-size="12">
+      <rect x="5" y="20" width="125" height="78" rx="12" fill="#232f57"/><text x="67" y="50" text-anchor="middle" fill="#fff" font-weight="800">Screen</text><text x="67" y="68" text-anchor="middle" fill="#cfd6ea" font-size="10">BookingWizard.tsx</text><text x="67" y="83" text-anchor="middle" fill="#cfd6ea" font-size="10">user taps Confirm</text>
+      <rect x="150" y="20" width="125" height="78" rx="12" fill="#eef1f8"/><text x="212" y="50" text-anchor="middle" font-weight="800" fill="#232f57">Query hook</text><text x="212" y="68" text-anchor="middle" fill="#5b6478" font-size="10">queries/bookings.ts</text><text x="212" y="83" text-anchor="middle" fill="#5b6478" font-size="10">useCreateBooking()</text>
+      <rect x="295" y="20" width="125" height="78" rx="12" fill="#eef1f8"/><text x="357" y="50" text-anchor="middle" font-weight="800" fill="#232f57">api.ts</text><text x="357" y="68" text-anchor="middle" fill="#5b6478" font-size="10">POST /bookings</text><text x="357" y="83" text-anchor="middle" fill="#5b6478" font-size="10">+ Bearer token</text>
+      <rect x="440" y="20" width="125" height="78" rx="12" fill="#e7f0ff"/><text x="502" y="50" text-anchor="middle" font-weight="800" fill="#232f57">Backend</text><text x="502" y="68" text-anchor="middle" fill="#5b6478" font-size="10">route → controller</text><text x="502" y="83" text-anchor="middle" fill="#5b6478" font-size="10">→ booking service</text>
+      <rect x="585" y="20" width="110" height="78" rx="12" fill="#e7f0ff"/><text x="640" y="50" text-anchor="middle" font-weight="800" fill="#232f57">PostgreSQL</text><text x="640" y="68" text-anchor="middle" fill="#5b6478" font-size="10">no-overlap rule</text><text x="640" y="83" text-anchor="middle" fill="#5b6478" font-size="10">stops double booking</text>
+      <line x1="130" y1="59" x2="147" y2="59" stroke="#ee8888" stroke-width="2" marker-end="url(#b)"/>
+      <line x1="275" y1="59" x2="292" y2="59" stroke="#ee8888" stroke-width="2" marker-end="url(#b)"/>
+      <line x1="420" y1="59" x2="437" y2="59" stroke="#ee8888" stroke-width="2" marker-end="url(#b)"/>
+      <line x1="565" y1="59" x2="582" y2="59" stroke="#ee8888" stroke-width="2" marker-end="url(#b)"/>
+      <path d="M640 100 C 640 170, 70 170, 67 103" fill="none" stroke="#5b6478" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#b)"/>
+      <text x="350" y="160" text-anchor="middle" fill="#5b6478" font-size="11">the answer comes back: the new booking (201), or an error such as "That time slot is no longer available" (409)</text>
+      <text x="350" y="200" text-anchor="middle" fill="#161a23" font-size="11.5">The screen then refreshes the lists (TanStack Query) and opens the new booking.</text>
+    </g>
+  </svg>
+  <table>
+    <tr><th>Layer</th><th>Its only job</th></tr>
+    <tr><td>Screen (<code>src/features</code>)</td><td>Show things, collect what the user picks, show loading and errors.</td></tr>
+    <tr><td>Query hook (<code>src/lib/queries</code>)</td><td>Name the action ("create a booking"), cache results, refresh lists afterwards.</td></tr>
+    <tr><td><code>src/lib/api.ts</code></td><td>Send the request with the login token; turn errors into readable messages; a "401" logs you out.</td></tr>
+    <tr><td>Backend service</td><td>Check permissions and every rule, use India time, write history and the audit log.</td></tr>
+    <tr><td>Database</td><td>Store it. A database rule makes two bookings for the same technician at the same time impossible.</td></tr>
+  </table>
+  <div class="box tip"><b class="t">Adding a new screen, in short</b>1) a query in <code>src/lib/queries</code>, 2) the content in <code>src/features</code>, 3) a small route file in <code>app/</code> that renders it, 4) its title in that area's <code>_layout.tsx</code>, 5) colours only from <code>useAppTheme()</code>.</div>
+</section>
+
+<!-- ============================ 15. IMPORTANT ============================ -->
+<section class="page">
+  <div class="chapter"><span class="n">15</span><h1>Important things to know</h1></div>
+  <div class="cols">
+    <div class="card"><h3>The backend decides</h3>Free times, prices, totals and who may do what are decided by the server. The app never works these out itself. Hiding a button is only for looks; the server checks again.</div>
+    <div class="card"><h3>India time, always</h3>All dates and times are shown in India time (IST), whatever the phone's setting. The server stores times in UTC.</div>
+    <div class="card"><h3>Logging in on the phone</h3>The app logs in with the header <code>X-Client: mobile</code>, gets a token, keeps it in the phone's secure keystore and sends it as <code>Authorization: Bearer …</code>.</div>
+    <div class="card"><h3>Expo Go vs your own build</h3>Expo Go can't contain Razorpay's native code, so Pay online is hidden there. Your development build has it.</div>
+    <div class="card"><h3>When you need a new APK</h3>Only after adding or upgrading a library with native code, or changing <code>app.json</code> plugins/permissions. Screen and logic changes reach the phone from <code>npx expo start</code>.</div>
+    <div class="card"><h3>Always bump the version</h3>Before each build, raise <code>version</code> and <code>versionCode</code> in <code>app.json</code>. The login screen shows them, so you know which build you're testing.</div>
+    <div class="card"><h3>The Expo crash fix</h3><code>scripts/patch-expo-ui.js</code> runs after every <code>npm install</code>. It stops a crash in Expo SDK 57 (<code>UnsatisfiedLinkError … clearAllContentOrigins</code>) when the development build opens the app. Remove it once Expo fixes the bug.</div>
+    <div class="card"><h3>Secrets</h3><code>.env</code> files are ignored by Git. Never commit keys or passwords. Razorpay runs in test mode only.</div>
+    <div class="card"><h3>Your IP changes</h3>New day, new Wi-Fi or a hotspot: run <code>ipconfig</code> and update <code>EXPO_PUBLIC_API_URL</code>, then restart <code>npx expo start</code>.</div>
+    <div class="card"><h3>App colours</h3>8 palettes (Navy default) and light/dark live in <code>src/ui/theme.ts</code>. Screens use <code>useAppTheme()</code>; no colour is hard-coded in a screen.</div>
+  </div>
+  <h2>Ports used</h2>
+  <table>
+    <tr><th>Port</th><th>What</th></tr>
+    <tr><td>4000</td><td>Backend API (dev)</td></tr>
+    <tr><td>8081</td><td>Metro / Expo code server</td></tr>
+    <tr><td>3000</td><td>Browser preview of the app (and the website)</td></tr>
+    <tr><td>4200 / 8200</td><td>The mobile E2E tests' own API and app (their own database)</td></tr>
+  </table>
+</section>
+
+<!-- ============================ 16. TESTS ============================ -->
+<section class="page">
+  <div class="chapter"><span class="n">16</span><h1>Tests, demo videos and screenshots</h1></div>
+  <table>
+    <tr><th>Command</th><th>What it checks / makes</th><th>Notes</th></tr>
+    <tr><td><code>npm run typecheck</code></td><td>TypeScript: no type errors anywhere.</td><td>Seconds.</td></tr>
+    <tr><td><code>npm test</code></td><td>Unit tests (India-time dates, money, helpers).</td><td>Seconds.</td></tr>
+    <tr><td><code>npx playwright test</code></td><td>End-to-end on Pixel 7 and iPhone 14 sizes: customer books and cancels, staff books for a customer, technician completes and records cash, owner opens Roles, dark mode persists.</td><td>Needs PostgreSQL. Starts its own API and app, wipes and seeds its own database (<code>businesshub_e2e_mobile</code>). About 1–2 min.</td></tr>
+    <tr><td><code>npm run demo</code></td><td>Records the 9 demo clips (Full HD, phone frame) into <code>demo-videos/</code>.</td><td>About 4–5 min. <code>DEMO_SCENES=2,5</code> re-records only those.</td></tr>
+    <tr><td><code>npm run shots</code></td><td>Screenshots of the main screens in all 8 colours, light and dark, plus a cut-off check.</td><td><code>SHOTS_PALETTES=navy,teal</code>, <code>SHOTS_WIDTH=375</code>.</td></tr>
+    <tr><td><code>npx expo-doctor</code></td><td>Checks the Expo setup and library versions.</td><td>Should say all checks passed.</td></tr>
+    <tr><td><code>npm run lint</code></td><td>Code style (ESLint).</td><td></td></tr>
+  </table>
+  <div class="shots">
+    <figure><img src="{{img:navy-light-4-booking-detail.png}}">Booking with the visit tracker</figure>
+    <figure><img src="{{img:navy-light-7-reports.png}}">Reports</figure>
+    <figure><img src="{{img:navy-light-8-settings.png}}">Settings: app colours</figure>
+  </div>
+
+  <!-- ============================ 17. CHEATSHEET ============================ -->
+  <div class="chapter" style="margin-top:12pt"><span class="n">17</span><h1>Command cheat sheet</h1></div>
+  <table>
+    <tr><th>I want to…</th><th>Run (in the right folder)</th></tr>
+    <tr><td>Start the backend</td><td><code>npm run dev</code> (backend)</td></tr>
+    <tr><td>Start notifications</td><td><code>npm run worker</code> (backend)</td></tr>
+    <tr><td>Reset demo data</td><td><code>npm run seed</code> (backend)</td></tr>
+    <tr><td>Serve the app to the phone</td><td><code>npx expo start</code> (mobile) · add <code>--clear</code> if things look stale</td></tr>
+    <tr><td>Open the app in a browser</td><td><code>npm run web -- --port 3000</code> (mobile)</td></tr>
+    <tr><td>Log in to Expo</td><td><code>npx eas-cli@latest login</code></td></tr>
+    <tr><td>Build the APK</td><td><code>npx eas-cli@latest build --profile development --platform android</code></td></tr>
+    <tr><td>See my builds</td><td><code>npx eas-cli@latest build:list</code> or expo.dev → Builds</td></tr>
+    <tr><td>Find my PC's IP</td><td><code>ipconfig</code></td></tr>
+  </table>
+</section>
+
+<!-- ============================ 18. TROUBLESHOOTING ============================ -->
+<section class="flow">
+  <div class="chapter"><span class="n">18</span><h1>Troubleshooting</h1></div>
+  <table>
+    <tr><th style="width:30%">You see</th><th style="width:30%">Why</th><th>Fix</th></tr>
+    <tr><td>"Can't reach the server…" in the app</td><td>Backend not running, wrong IP, different Wi-Fi, or firewall.</td><td>Check <code>http://&lt;IP&gt;:4000/health</code> on the phone's browser. Run <code>npm run dev</code>, update <code>.env</code> IP, set Wi-Fi to Private, allow Node.js, or use the phone hotspot.</td></tr>
+    <tr><td>HomeFix app can't connect to the development server</td><td>Port 8081 blocked or <code>npx expo start</code> not running.</td><td>Start it, allow Node.js in the firewall, or type the URL manually: <code>http://&lt;IP&gt;:8081</code>.</td></tr>
+    <tr><td>App crashes right after opening, <code>UnsatisfiedLinkError … clearAllContentOrigins</code></td><td>The Expo SDK 57 bug.</td><td>Make sure <code>npm install</code> printed "patch-expo-ui: patched", then build a new APK.</td></tr>
+    <tr><td>No "Pay online" button</td><td>Expo Go or browser; no Razorpay keys in backend <code>.env</code>; booking not Completed or already paid.</td><td>Use the HomeFix build, add test keys and restart the backend, complete a visit without recording payment.</td></tr>
+    <tr><td>EAS: "username, email, or password was incorrect"</td><td>Not your Expo password, or a Google/GitHub sign-up.</td><td>Reset it on expo.dev or use <code>npx eas-cli@latest login</code> (browser login).</td></tr>
+    <tr><td>"adb … ENOENT" after a build</td><td>You chose to run on an emulator without Android Studio.</td><td>Ignore it; install the APK on your phone.</td></tr>
+    <tr><td>Play Protect blocks the install</td><td>App not from the Play Store.</td><td>More details → Install anyway.</td></tr>
+    <tr><td>Old screens / changes don't appear</td><td>Cached code.</td><td>Press <code>r</code> in the Expo terminal, or restart with <code>npx expo start --clear</code>.</td></tr>
+    <tr><td>Browser preview: requests fail (CORS)</td><td>The backend only allows its <code>FRONTEND_URL</code> address.</td><td>Use port 3000, or set <code>FRONTEND_URL</code> to the preview's address.</td></tr>
+    <tr><td>"Port 3000/8081 is in use"</td><td>Another app or an old server is running.</td><td>Close it, or pick another port (e.g. <code>--port 8082</code>).</td></tr>
+    <tr><td><code>prisma migrate</code> fails to connect</td><td>PostgreSQL not running or wrong password.</td><td>Start the PostgreSQL service; fix <code>DATABASE_URL</code> in the backend <code>.env</code>.</td></tr>
+    <tr><td>Version line shows the old build</td><td>The new APK isn't installed yet.</td><td>Install the new APK (it's an update), then reopen the app.</td></tr>
+  </table>
+</section>
+
+<!-- ============================ 19-20. GLOSSARY + LOGINS ============================ -->
+<section class="page">
+  <div class="chapter"><span class="n">19</span><h1>Glossary</h1></div>
+  <table>
+    <tr><th style="width:24%">Word</th><th>Meaning</th></tr>
+    <tr><td>React Native</td><td>Write the app once in JavaScript/TypeScript and React; it runs as a real Android/iPhone app.</td></tr>
+    <tr><td>Expo</td><td>Tools on top of React Native: ready-made phone features, the code server, the cloud builds.</td></tr>
+    <tr><td>Expo Go</td><td>A ready app from the Play Store that runs Expo projects without building them. Can't hold extra native code.</td></tr>
+    <tr><td>Development build</td><td>Your own version of "Expo Go" with this app's native code inside (Razorpay, photos). Loads screens from your PC.</td></tr>
+    <tr><td>EAS</td><td>Expo Application Services: the cloud that builds (and can publish) the app.</td></tr>
+    <tr><td>APK</td><td>The Android app file you install.</td></tr>
+    <tr><td>Metro</td><td>The code server started by <code>npx expo start</code>; it bundles the JavaScript and sends it to the phone.</td></tr>
+    <tr><td>Native code</td><td>Java/Kotlin (Android) or Swift (iOS) inside a library. Needs a new APK when it changes.</td></tr>
+    <tr><td>Expo Router</td><td>Screens are files in <code>app/</code>; the folder path is the screen's address.</td></tr>
+    <tr><td>TanStack Query</td><td>Fetches data from the API, caches it and refreshes it.</td></tr>
+    <tr><td>Zod</td><td>Checks form input (and on the server, every request).</td></tr>
+    <tr><td>JWT / token</td><td>The proof you're logged in, sent with every request.</td></tr>
+    <tr><td>Keystore</td><td>The secret key that signs the APK. Expo keeps it for you.</td></tr>
+    <tr><td>Prisma</td><td>The backend's tool to talk to PostgreSQL and to change tables (migrations).</td></tr>
+    <tr><td>Playwright</td><td>Drives a browser automatically: the tests and the demo videos.</td></tr>
+    <tr><td>Razorpay test mode</td><td>Payments that behave like real ones, but no money moves.</td></tr>
+  </table>
+
+  <div class="chapter" style="margin-top:14pt"><span class="n">20</span><h1>Demo logins</h1></div>
+  <p>From the backend's demo data (<code>npm run seed</code>). Password for all: <code>Password@123</code>. In development the login screen has buttons that fill these in.</p>
+  <table>
+    <tr><th>Role</th><th>Login</th><th>Sees</th></tr>
+    <tr><td>Owner</td><td><code>owner@homefix.test</code></td><td>Everything, including users, services, audit log, roles</td></tr>
+    <tr><td>Manager</td><td><code>manager@homefix.test</code></td><td>Bookings for anyone, technicians, reports</td></tr>
+    <tr><td>Technician</td><td><code>rahul@homefix.test</code> (also arjun@, suresh@)</td><td>Only their own jobs</td></tr>
+    <tr><td>Customer</td><td><code>ravi@example.test</code></td><td>Only his own bookings, payments, reviews</td></tr>
+  </table>
+  <div class="box warn"><b class="t">Demo only</b>These are shared demo accounts with a well-known password. Never use them on a real, public system.</div>
+  <p class="small center" style="margin-top:18pt">HomeFix Mobile · Setup, Build &amp; Run Guide · generated from <code>docs/guide/guide.html</code> with <code>node docs/guide/build-guide.cjs</code></p>
+</section>
+
+</body>
+</html>
