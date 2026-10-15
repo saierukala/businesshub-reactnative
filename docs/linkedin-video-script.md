@@ -52,41 +52,41 @@ On screen: notifications, the booking with the progress tracker, Approve.
 
 > Ravi gets a notification. On his booking, the tracker shows the work has started. He reviews the extra charge and taps Approve. Nothing extra is done without his OK.
 
-## 5. Technician completes the visit (22 s)
+## 5. Technician completes the visit (22 s) — start the audio at 0:03
 
-On screen: What did you find, What did you do, Complete visit, Amount to collect ₹799.
+Timeline: 0:02 job screen (extra approved) · 0:04 types what he found · 0:07–0:12 types what he did · 0:13 taps Complete visit · 0:14 "Visit completed" · 0:17 ₹799 to collect.
 
-> Rahul writes what he found and what he did, then completes the visit. The app shows the amount to collect, seven hundred and ninety nine rupees: the visit charge plus the approved extra. The server works out every amount.
+> Rahul writes what he found, a drain pump blockage, and what he did: pump cleaned, hose checked, machine tested. He taps Complete visit. Visit completed. The app shows seven hundred and ninety nine rupees to collect, the visit charge plus the approved extra.
 
-## 6. Customer pays online on a real phone (31 s)
+## 6. Customer pays online on a real phone (31 s) — start the audio at 0:01
 
-On screen: real Android phone in dark mode, a completed booking, Pay ₹649 online, Razorpay, Netbanking, test bank page, Success, "Payment successful", Paid by online, receipt.
+Timeline: 0:01 home (dark mode) · 0:04 My bookings · 0:06 the booking · 0:08 ₹649 to pay, taps Pay online · 0:10 Razorpay opens · 0:12 picks a bank · 0:15 processing · 0:17 test bank, Success · 0:21 paid online · 0:26 receipt.
 
-> Now a real Android phone, in dark mode. The customer opens a finished repair and taps Pay online. Razorpay's secure checkout opens in test mode, so no real money moves. He picks Netbanking and a test bank, and the payment succeeds. The server checks Razorpay's signature, marks the booking paid, and the receipt is ready.
+> Now on a real Android phone, in dark mode. Ravi opens his bookings and picks a finished repair. Six hundred and forty nine rupees to pay. He taps Pay online. Razorpay's secure checkout opens, in test mode. He chooses a bank, the payment processes, and the test bank says Success. Back in the app, it is paid online, and the receipt is ready: six hundred and forty nine rupees received.
 
-## 7. Manager books for a phone-only customer (34 s)
+## 7. Manager books for a phone-only customer (34 s) — start the audio at 0:02
 
-On screen: New booking, search Priya, her Daikin AC, AC is not cooling, AC Repair, address, day and time, Phone call, confirmed, "call to keep them informed" banner.
+Timeline: 0:02 Who is this for · 0:04 searches Priya · 0:06 Daikin air conditioner · 0:09–0:14 types the problem, picks AC Repair · 0:15 address · 0:18 day and 9:00 am · 0:23 review · 0:25 Phone call, Confirm · 0:27 booked, "call to keep them informed".
 
-> Priya calls the office. She has no app and no email. The manager finds her by name, picks her Daikin air conditioner, types the problem, AC is not cooling, then the service, her address and a free time. He records that the booking came from a phone call and confirms. Because Priya gets no messages, the app reminds staff to call her with updates.
+> Priya calls the office. She has no app and no email. The manager finds her and picks her Daikin air conditioner, types the problem, AC is not cooling, and chooses AC repair. Then her address, a day, and a free nine a.m. slot. He reviews it, marks it as a phone call, and confirms. Booked. Since Priya gets no messages, the app reminds staff to call her with updates.
 
-## 8. Owner dashboard and reports (14 s)
+## 8. Owner dashboard and reports (14 s) — start the audio at 0:02
 
-On screen: dashboard with revenue and counts, More tab, Reports.
+Timeline: 0:02 dashboard (revenue, 1 booking today, 1 waiting for a technician) · 0:06 More · 0:08 Reports.
 
-> The owner sees the day at a glance: revenue, bookings, and jobs waiting for a technician. Reports go deeper, by bookings, revenue, services and technicians.
+> The owner sees today at a glance: revenue, bookings, and a job waiting for a technician. From More, she opens Reports: bookings, revenue, services and technicians.
 
-## 9. Roles and permissions (14 s)
+## 9. Roles and permissions (14 s) — start the audio at 0:02
 
-On screen: Roles & permissions, Owner, then Technician, then Customer.
+Timeline: 0:02 More · 0:04 Roles and permissions, Owner · 0:07 Technician · 0:09 Customer.
 
-> Every role sees only what it is allowed to. Owner, technician, customer. And the server checks these rules on every single request.
+> Roles and permissions. The owner can do everything. A technician, only their own jobs. A customer, only their own bookings. And the server checks every rule.
 
-## 10. Settings, dark mode (16 s)
+## 10. Settings, dark mode (16 s) — start the audio at 0:02
 
-On screen: Account, Settings, Dark, home screen in dark mode.
+Timeline: 0:02 My account · 0:05 Settings · 0:07 Dark · 0:11 home in dark mode.
 
-> Every user can pick light or dark mode, and an app colour. Ravi switches to dark mode, and the whole app follows.
+> In his account, Ravi opens Settings. He can choose light or dark mode, and an app colour. He picks Dark, and the whole app switches. Home, now in dark mode.
 
 ## 11. End card (8 s)
 
