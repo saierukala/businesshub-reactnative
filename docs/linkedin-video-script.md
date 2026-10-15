@@ -32,7 +32,7 @@ Amounts are written out in words so the voice reads them correctly.
 
 On screen: login typed, home, Book tab, appliance, problem and service, address, day and time, review, confirmed.
 
-> Ravi, a customer, logs in on his phone and taps Book. Step one, he picks his LG washing machine. Step two, he types what is wrong, machine is not draining water, and chooses the repair service with its price. Step three, his home address. Step four, he picks a day, and the app shows only the times the server says are free. The phone never decides availability. Step five, he checks the summary and confirms. The booking is confirmed, with its own booking number.
+> Ravi logs in and taps Book. He picks his washing machine, describes the problem, chooses the service and his address, then a free time slot from the server. He confirms, and the booking is done.
 
 ## 2. Manager assigns a technician (16 s)
 
