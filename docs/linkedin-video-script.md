@@ -26,7 +26,7 @@ Amounts are written out in words so the voice reads them correctly.
 
 ## 0. Title card (6 s)
 
-> This is HomeFix, a mobile app for an appliance repair business in Hyderabad. One app for customers, technicians and staff.
+> HomeFix: one app to book, run and pay for appliance repairs.
 
 ## 1. Customer books a repair (46 s)
 
