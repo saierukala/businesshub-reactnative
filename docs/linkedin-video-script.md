@@ -26,7 +26,7 @@ Amounts are written out in words so the voice reads them correctly.
 
 ## 0. Title card (6 s)
 
-> HomeFix: one app to book, run and pay for appliance repairs.
+> This is the HomeFix mobile app, for an appliance repair business, which I built end to end.
 
 ## 1. Customer books a repair (46 s)
 
