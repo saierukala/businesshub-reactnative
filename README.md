@@ -4,7 +4,7 @@ A React Native (Expo) app for an appliance repair business. Customers book and p
 visits from the phone, and the owner and managers run the day: one app, four roles.
 
 This is the mobile client of **BusinessHub**, a booking and field-service system. It talks to the same API as the web app:
-- Backend (Node.js, Express, PostgreSQL): [businesshub-backend](https://github.com/saierukala/businesshub-backend)
+- Backend (Node.js, Express, PostgreSQL): private repository
 - Web app (Next.js): [businesshub-frontend](https://github.com/saierukala/businesshub-frontend)
 
 **🎥 [Watch the demo video](https://drive.google.com/file/d/157z9WD6HO0IEs9F54uRjFi96dneqXbnd/view?usp=drive_link)**: booking, assigning a technician, the visit, approving an extra charge, paying with Razorpay on a real Android phone, and the owner's view.
