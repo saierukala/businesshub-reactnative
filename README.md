@@ -7,6 +7,8 @@ This is the mobile client of **BusinessHub**, a booking and field-service system
 - Backend (Node.js, Express, PostgreSQL): [businesshub-backend](https://github.com/saierukala/businesshub-backend)
 - Web app (Next.js): [businesshub-frontend](https://github.com/saierukala/businesshub-frontend)
 
+**🎥 [Watch the demo video](https://drive.google.com/file/d/157z9WD6HO0IEs9F54uRjFi96dneqXbnd/view?usp=drive_link)**: booking, assigning a technician, the visit, approving an extra charge, paying with Razorpay on a real Android phone, and the owner's view.
+
 ![HomeFix screens](docs/screenshots/banner.png)
 
 ## What it does
